@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.repository.user_roles;
+package com.github.shoppingmallproject.repository.userRoles;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

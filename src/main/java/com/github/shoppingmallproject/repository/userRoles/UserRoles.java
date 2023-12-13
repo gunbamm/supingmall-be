@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.repository.user_roles;
+package com.github.shoppingmallproject.repository.userRoles;
 
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
@@ -7,10 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+
 @Table(name = "user_roles")
 @Getter
 @Builder
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRoles {

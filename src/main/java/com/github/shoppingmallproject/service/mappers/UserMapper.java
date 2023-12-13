@@ -16,14 +16,17 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    UserEntity UserDtoToUserEntity(SignUpRequest signUpRequest);
+    UserEntity signUpRequestToUserEntity(SignUpRequest signUpRequest);
     @Mapping(target = "createdAt", expression = "java(formatting(userEntity.getCreatedAt()))")
-    SignUpResponse UserEntityToUserDto(UserEntity userEntity);
+    SignUpResponse userEntityToSignUpResponse(UserEntity userEntity);
 
     default String formatting(LocalDateTime localDateTime){
         if( localDateTime != null ){
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 - HH시 mm분");
             return localDateTime.format(dateTimeFormatter);
         }else return null;
+    }
+    default String setDefault(String imageUrl){
+        return imageUrl==null ? "url" : imageUrl;
     }
 }

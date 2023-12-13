@@ -1,7 +1,9 @@
 package com.github.shoppingmallproject.repository.users;
 
-import com.github.shoppingmallproject.repository.user_roles.UserRoles;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.github.shoppingmallproject.repository.userRoles.UserRoles;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +14,7 @@ import java.util.Collection;
 @Table(name = "users")
 @Getter
 @Setter
+@EqualsAndHashCode(of = "userId")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,10 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "image_url", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'url'")
     private String imageUrl;
     @Column(name = "address", nullable = false)
     private String address;

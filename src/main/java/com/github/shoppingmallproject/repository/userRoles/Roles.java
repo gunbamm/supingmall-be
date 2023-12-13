@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.repository.user_roles;
+package com.github.shoppingmallproject.repository.userRoles;
 
 import jakarta.persistence.*;
 import lombok.Getter;

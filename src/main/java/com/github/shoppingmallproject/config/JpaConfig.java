@@ -2,6 +2,7 @@ package com.github.shoppingmallproject.config;
 
 import com.github.shoppingmallproject.config.properties.DataSourceProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@EntityScan
 @EnableConfigurationProperties(DataSourceProperties.class)
 @RequiredArgsConstructor
 @EnableJpaRepositories(
         basePackages = {
-                "com.github.shoppingmallproject.repository.user_roles",
+                "com.github.shoppingmallproject.repository.userRoles",
                 "com.github.shoppingmallproject.repository.users"
         },
         entityManagerFactoryRef = "localContainerEntityManagerFactoryBean",
@@ -44,7 +46,7 @@ public class JpaConfig {
         LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
         lemfb.setDataSource(datasource);
         lemfb.setPackagesToScan(
-                "com.github.shoppingmallproject.repository.user_roles",
+                "com.github.shoppingmallproject.repository.userRoles",
                 "com.github.shoppingmallproject.repository.users"
         );
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
