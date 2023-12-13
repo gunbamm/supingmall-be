@@ -18,10 +18,10 @@ public class SignUpLoginController {
     public String signUp(@RequestBody SignUpRequest signUpRequest){
         return signUpLoginService.signUp(signUpRequest);
     }
-    @PostMapping("/login")
-    public String signUp(@RequestBody LoginRequest loginRequest){
-        return signUpLoginService.login(loginRequest);
-    }
+//    @PostMapping("/login")
+//    public String signUp(@RequestBody LoginRequest loginRequest){
+//        return signUpLoginService.login(loginRequest);
+//    }
 
 
 }

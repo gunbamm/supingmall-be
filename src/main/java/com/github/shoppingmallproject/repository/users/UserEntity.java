@@ -21,14 +21,16 @@ public class UserEntity {
     private String name;
     @Column(name = "email", nullable = false)
     private String email;
+
     @Column(name = "password", nullable = false)
     private String password;
+
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
     @Column(name = "address", nullable = false)
     private String address;
     @Column(name = "join_date", nullable = false)
-    private LocalDateTime joinDate;
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "userEntity")
     private Collection<UserRoles> userRoles;
