@@ -111,15 +111,20 @@ public class SignUpLoginService {
     public String setSuperUser(String email) {
         UserEntity userEntity = userJpa.findByEmailJoin(email)
                 .orElseThrow(()->new NotFoundException("이메일 \""+email+"\"의 계정을 찾을 수 없습니다."));
-
+        List<Roles> userRoles = userEntity.getUserRoles().stream()
+                .map(ur->ur.getRoles()).toList();
         Roles roles = rolesJpa.findByName("ROLE_SUPERUSER");
+
+        if(userRoles.contains(roles)) return "이미 "+roles.getName()+"의 권한을 갖고 있습니다.";
+
 
         userRolesJpa.save(UserRoles.builder()
                         .roles(roles)
                         .userEntity(userEntity)
                 .build());
 
-        return "\""+userEntity.getEmail()+"\"의 계정의 권한이 "+userEntity.getUserRoles()
-                +"로 변경 되었습니다.";
+        return "\""+userEntity.getEmail()+"\"의 계정의 권한에 "
+                +roles.getName()
+                +"가 추가 되었습니다.";
     }
 }

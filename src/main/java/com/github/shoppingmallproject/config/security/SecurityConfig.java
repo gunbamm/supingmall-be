@@ -43,18 +43,21 @@ public class SecurityConfig {
                 })
                 .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests(a->{
-                    a.requestMatchers("/api/v1/user/logout").hasAnyRole("ADMIN","SUPERUSER","USER");
-                    a.requestMatchers("/admin/**","/api/account/set-super-user").hasRole("ADMIN");
-                    a.requestMatchers("/resources/static/**","/api/account/*").permitAll();
-                })
+
                 .exceptionHandling(e->{
                     e.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
                     e.accessDeniedHandler(new CustomAccessDeniedHandler());
                 })
+                .authorizeRequests(a ->
+                            a
+                                    .requestMatchers("/api/v1/user/logout").hasAnyRole("ADMIN", "SUPERUSER", "USER")
+                                    .requestMatchers("/admin/**", "/api/account/set-super-user").hasRole("ADMIN")
+                                    .requestMatchers("/resources/static/**", "/api/account/*").permitAll()
+
+                )
                 .logout(l-> {
                     l.logoutRequestMatcher(new AntPathRequestMatcher("/api/account/logout"));
-//                    l.logoutSuccessUrl("/api/account/login");
+                    l.logoutSuccessUrl("/api/account/login");
                     l.invalidateHttpSession(true);
 
                 })
