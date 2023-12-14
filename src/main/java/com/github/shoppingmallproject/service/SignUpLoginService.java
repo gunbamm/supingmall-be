@@ -13,20 +13,18 @@ import com.github.shoppingmallproject.service.mappers.UserMapper;
 import com.github.shoppingmallproject.web.dto.LoginRequest;
 import com.github.shoppingmallproject.web.dto.SignUpRequest;
 import com.github.shoppingmallproject.web.dto.SignUpResponse;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,10 +40,13 @@ public class SignUpLoginService {
     private final AuthenticationManager authenticationManager;
 
 
+
     @Transactional(transactionManager = "tm")
     public String signUp(SignUpRequest signUpRequest) {
         String email = signUpRequest.getEmail();
         String phoneNumber = signUpRequest.getPhoneNumber();
+        String password = signUpRequest.getPassword();
+
 
         if(!email.matches(".+@.+\\..+")){
            throw new NotAcceptException("이메일을 정확히 입력해주세요.");
@@ -55,12 +56,15 @@ public class SignUpLoginService {
 
         if(userJpa.existsByEmail(signUpRequest.getEmail())){
             return "이미 입력하신 \""+signUpRequest.getEmail()+"\" 이메일로 가입된 계정이 있습니다.";
-        }
-        if(userJpa.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
+        }else if(userJpa.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
             return "이미 입력하신 \"" + signUpRequest.getPhoneNumber() + "\" 핸드폰 번호로 가입된 계정이 있습니다.";
+        }else if(!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]+$")
+                ||!(password.length()>=8&&password.length()<=20)
+        ){
+            throw  new NotAcceptException("비밀번호는 8자 이상 20자 이하 숫자와 영문자 조합 이어야 합니다.");
         }
 
-        String password = signUpRequest.getPassword();
+
         signUpRequest.setPassword(passwordEncoder.encode(password));
 
         Roles roles = rolesJpa.findByName("ROLE_USER");
@@ -96,13 +100,27 @@ public class SignUpLoginService {
         }else throw new NotAcceptException("입력하신 이메일 또는 핸드폰 번호가 잘못입력되었습니다.");
 
         try{
+            if(userEntity.getStatus().equals("delete")){
+                throw new NotAcceptException("탈퇴한 계정입니다. 재가입 하시겠습니까? (ex 유저 정보들고 회원가입 리다이렉션 )");
+            }
+
+            if(userEntity.getStatus().equals("lock")){
+                LocalDateTime lockDateTime = userEntity.getLockDate();
+                LocalDateTime now = LocalDateTime.now();
+                if(now.isBefore(lockDateTime.plusMinutes(5))){
+                    Duration duration = Duration.between(now, lockDateTime.plusMinutes(5));
+                    throw new NotAcceptException(String.format("\"%s\"님의 계정이 비밀번호 5회 실패로 잠겼습니다.\n" +
+                            "남은 시간 : %s분 %s초", userEntity.getName(), duration.toMinutes()
+                            , duration.minusMinutes(duration.toMinutes()).getSeconds()));
+                }
+            }
+
             String email = userEntity.getEmail();
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             List<String> roles = userEntity.getUserRoles().stream()
                     .map(u->u.getRoles()).map(r->r.getName()).toList();
-            userEntity.setFailureCount(userEntity.getFailureCount()+1);
 
             return Arrays.asList(jwtTokenConfig.createToken(email, roles), userEntity.getName());
 //        }catch (InternalAuthenticationServiceException e){
@@ -111,12 +129,7 @@ public class SignUpLoginService {
             throw new NotAcceptException("비밀번호가 틀립니다.");
         }
     }
-    @Transactional(transactionManager = "tm")
-    public void failureCount(AuthenticationFailureBadCredentialsEvent event) {
-        String email = event.getAuthentication().getName();
-        UserEntity userEntity = userJpa.findByEmail(email);
-        userEntity.setFailureCount(userEntity.getFailureCount()+1);
-    }
+
 
     @Transactional(transactionManager = "tm")
     public String setSuperUser(String email) {
@@ -128,7 +141,6 @@ public class SignUpLoginService {
 
         if(userRoles.contains(roles)) return "이미 "+roles.getName()+"의 권한을 갖고 있습니다.";
 
-
         userRolesJpa.save(UserRoles.builder()
                         .roles(roles)
                         .userEntity(userEntity)
@@ -138,5 +150,4 @@ public class SignUpLoginService {
                 +roles.getName()
                 +"가 추가 되었습니다.";
     }
-
 }

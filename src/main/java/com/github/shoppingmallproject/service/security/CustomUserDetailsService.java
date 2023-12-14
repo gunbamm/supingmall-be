@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserEntity userEntity = userJpa.findByEmailJoin(email).orElseThrow(() ->
                 new NotFoundException(String.format("해당 이메일 \"%s\"의 계정을 찾을 수 없습니다.", email)));
 
-        CustomUserDetails customUserDetails = CustomUserDetails.builder()
+        return CustomUserDetails.builder()
                 .userId(userEntity.getUserId())
                 .email(userEntity.getEmail())
                 .address(userEntity.getAddress())
@@ -37,7 +37,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .collect(Collectors.toList()))
                 .build();
 
-        return customUserDetails;
     }
 
 }
