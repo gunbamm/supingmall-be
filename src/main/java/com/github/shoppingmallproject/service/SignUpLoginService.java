@@ -13,15 +13,19 @@ import com.github.shoppingmallproject.service.mappers.UserMapper;
 import com.github.shoppingmallproject.web.dto.LoginRequest;
 import com.github.shoppingmallproject.web.dto.SignUpRequest;
 import com.github.shoppingmallproject.web.dto.SignUpResponse;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Arrays;
 import java.util.List;
@@ -98,6 +102,7 @@ public class SignUpLoginService {
 
             List<String> roles = userEntity.getUserRoles().stream()
                     .map(u->u.getRoles()).map(r->r.getName()).toList();
+            userEntity.setFailureCount(userEntity.getFailureCount()+1);
 
             return Arrays.asList(jwtTokenConfig.createToken(email, roles), userEntity.getName());
 //        }catch (InternalAuthenticationServiceException e){
@@ -105,6 +110,12 @@ public class SignUpLoginService {
         }catch (BadCredentialsException e){
             throw new NotAcceptException("비밀번호가 틀립니다.");
         }
+    }
+    @Transactional(transactionManager = "tm")
+    public void failureCount(AuthenticationFailureBadCredentialsEvent event) {
+        String email = event.getAuthentication().getName();
+        UserEntity userEntity = userJpa.findByEmail(email);
+        userEntity.setFailureCount(userEntity.getFailureCount()+1);
     }
 
     @Transactional(transactionManager = "tm")
@@ -127,4 +138,5 @@ public class SignUpLoginService {
                 +roles.getName()
                 +"가 추가 되었습니다.";
     }
+
 }
