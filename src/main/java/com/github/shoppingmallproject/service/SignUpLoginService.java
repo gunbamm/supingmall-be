@@ -107,9 +107,9 @@ public class SignUpLoginService {
                 LocalDateTime now = LocalDateTime.now();
                 if(now.isBefore(lockDateTime.plusMinutes(5))){
                     Duration duration = Duration.between(now, lockDateTime.plusMinutes(5));
-                    throw new AccountLockedException(String.format("\"%s\"님의 계정이 비밀번호 5회 실패로 잠겼습니다.\n" +
-                            "남은 시간 : %s분 %s초", userEntity.getName(), duration.toMinutes()
-                            , duration.minusMinutes(duration.toMinutes()).getSeconds()));
+                    String minute = String.valueOf(duration.toMinutes());
+                    String seconds = String.valueOf(duration.minusMinutes(duration.toMinutes()).getSeconds());
+                    throw new AccountLockedException(userEntity.getName(), minute, seconds);
                 }
             }
 

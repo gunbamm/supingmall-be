@@ -22,7 +22,7 @@ public class ExceptionControllerAdvice {
         return n.getMessage();
     }
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(CustomBindException.class)//양식과 맞지 않을때
     public String handleCustomBindException(CustomBindException n){
         return n.getMessage();
@@ -39,7 +39,7 @@ public class ExceptionControllerAdvice {
         return n.getMessage();
     }
 
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.LOCKED)
     @ExceptionHandler(AccountLockedException.class)//계정이 잠겼을때
     public String handleAccountLockedException(AccountLockedException n){
         return n.getMessage();
