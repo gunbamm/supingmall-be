@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .csrf((c)->c.disable())
                 .httpBasic((h)->h.disable())
                 .formLogin(f->f.disable())
+//                .oauth2Login(o->o.loginPage("/api/account/login"))
                 .rememberMe(r->r.disable())
                 .cors(c->{
                     c.configurationSource(corsConfigurationSource());
@@ -80,7 +81,7 @@ public class SecurityConfig {
         corsConfiguration.addExposedHeader("TOKEN");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","PUT","POST","PATCH","DELETE","OPTIONS"));
-        corsConfiguration.setMaxAge(3600L);
+        corsConfiguration.setMaxAge(1000L*60*60);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration);
