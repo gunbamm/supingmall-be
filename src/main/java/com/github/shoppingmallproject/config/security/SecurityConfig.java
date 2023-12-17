@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .authorizeRequests(a ->
                             a
                                     .requestMatchers("/api/v1/user/logout").hasAnyRole("ADMIN", "SUPERUSER", "USER")
+                                    .requestMatchers("/api/account/my-page").hasAnyRole("ADMIN", "SUPERUSER", "USER")
                                     .requestMatchers("/admin/**", "/api/account/set-super-user").hasRole("ADMIN")
                                     .requestMatchers("/resources/static/**", "/api/account/*").permitAll()
 

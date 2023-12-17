@@ -1,6 +1,5 @@
 package com.github.shoppingmallproject.repository.users;
 
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.shoppingmallproject.repository.userRoles.UserRoles;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -26,6 +25,9 @@ public class UserEntity {
     private String gender;
     @Column(name = "email", nullable = false)
     private String email;
+    @Column(name = "nick_name", nullable = false)
+    private String nickName;
+
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "phone_number", nullable = false)
@@ -36,6 +38,10 @@ public class UserEntity {
     private String address;
     @Column(name = "join_date", nullable = false)
     private LocalDateTime createdAt;
+
+//    @OneToOne
+//    @JoinColumn(name = "cart_id", nullable = false)
+//    private CartEntity cartEntity;
 
     @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'normal'")
     private String status = "normal";

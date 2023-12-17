@@ -2,6 +2,7 @@ package com.github.shoppingmallproject.web.controller;
 
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.service.SignUpLoginService;
+import com.github.shoppingmallproject.web.dto.AccountDTO;
 import com.github.shoppingmallproject.web.dto.LoginRequest;
 import com.github.shoppingmallproject.web.dto.SignUpRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +41,11 @@ public class SignUpLoginController {
     @PostMapping("/set-super-user")
     public String setSuperUser(HttpServletRequest httpServletRequest){
         return signUpLoginService.setSuperUser(httpServletRequest.getParameter("email"));
+    }
+
+    @GetMapping("/my-page")
+    public AccountDTO getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        return signUpLoginService.getMyInfo(customUserDetails);
     }
 
 }

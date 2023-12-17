@@ -45,6 +45,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     //password-hide
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    //mariadb
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
 }
 
 tasks.named('test') {

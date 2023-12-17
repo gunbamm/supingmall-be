@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LoginRequest {
-    private String emailOrPhoneNumber;
+    private String emailOrPhoneNumberOrNickName;
     private String password;
 }

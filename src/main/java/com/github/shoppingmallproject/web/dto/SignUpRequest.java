@@ -15,6 +15,7 @@ public class SignUpRequest {
     private String phoneNumber;
     private String password;
     private String name;
+    private String nickName;
     private String address;
     private String imageUrl;
     private String gender;

@@ -1,8 +1,9 @@
 datasource:
   username: ${DATABASE_USERNAME}
   password: ${DATABASE_PASSWORD}
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/shopping_mall_project
+  driver-class-name: org.mariadb.jdbc.Driver
+  url: jdbc:mariadb://database-1.cvyclyh4jg14.ap-northeast-2.rds.amazonaws.com:3306/shopping_mall_project
+
 
 jwtpassword:
   source: ${JWT_CODE}
