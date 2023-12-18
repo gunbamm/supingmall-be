@@ -16,6 +16,8 @@ public class AccountDTO {
     String email;
     String nickName;
     String password;
+    String newPassword;
+    String newPasswordConfirm;
     String phoneNumber;
     String imageUrl;
     String address;

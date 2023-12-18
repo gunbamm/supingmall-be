@@ -34,7 +34,7 @@ public class JwtTokenConfig {
     private long tokenExpiry = 1000L * 60 *60;
 
     public boolean validateToken(String token){
-        try{
+        try{//.ExpiredJwtException 토큰검증실패시 발생 따로 커스텀익셉션 설정안함.
             Claims claims = Jwts.parser()
                     .setSigningKey(key).parseClaimsJws(token)
                     .getBody();
