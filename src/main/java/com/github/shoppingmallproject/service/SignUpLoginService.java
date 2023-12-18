@@ -142,60 +142,7 @@ public class SignUpLoginService {
         }
     }
 
-
-    //유저권한 추가 (안쓸듯)
-    @Transactional(transactionManager = "tm")
-    public String setSuperUser(String email) {
-        UserEntity userEntity = userJpa.findByEmailJoin(email)
-                .orElseThrow(()->new NotFoundException("이메일",email));
-        List<Roles> userRoles = userEntity.getUserRoles().stream()
-                .map(ur->ur.getRoles()).toList();
-        Roles roles = rolesJpa.findByName("ROLE_SUPERUSER");
-
-        if(userRoles.contains(roles)) throw new DuplicateKeyException("이미 "+roles.getName()+"의 권한을 갖고 있습니다.");
-
-        userRolesJpa.save(UserRoles.builder()
-                        .roles(roles)
-                        .userEntity(userEntity)
-                .build());
-
-        return "\""+userEntity.getEmail()+"\"의 계정의 권한에 "
-                +roles.getName()
-                +"가 추가 되었습니다.";
-    }
-
-    //회원 탈퇴
-    @Transactional(transactionManager = "tm")
-    public String withdrawal(CustomUserDetails customUserDetails) {
-        UserEntity userEntity = userJpa.findById(customUserDetails.getUserId()).orElseThrow(
-                ()->new NotFoundException("계정을 찾을 수 없습니다. 다시 로그인 해주세요.")
-        );
-        if(userEntity.getStatus().equals("delete")){
-            throw new DuplicateKeyException("이미 탈퇴처리된 회원 입니다.");
-        }
-        userEntity.setStatus("delete");
-        userEntity.setDeletionDate(LocalDateTime.now());
-
-        return userEntity.getEmail()+" 계정 회원 탈퇴 완료";
-    }
-
-    //탈퇴한지 7일 이상된 계정 정보 자동 삭제 (하루에 한번씩 로직 실행됨)
-    @Transactional(transactionManager = "tm")
-    public void cleanupOldWithdrawnUser() {
-        List<UserEntity> userEntities = userJpa.findAll();
-        List<UserEntity> oldWithdrawnUser = userEntities.stream().filter(ue->ue.getDeletionDate()!=null)
-                .filter(ue-> ChronoUnit.DAYS.between(ue.getDeletionDate(),LocalDateTime.now())>=7).toList();
-        if (oldWithdrawnUser.isEmpty()) return;
-        userJpa.deleteAll(oldWithdrawnUser);
-    }
-
-    public AccountDTO getMyInfo(CustomUserDetails customUserDetails) {
-        String email = customUserDetails.getUsername();
-        UserEntity userEntity = userJpa.findByEmailJoin(customUserDetails.getUsername())
-                .orElseThrow(()->new NotFoundException("계정을 찾을 수 없습니다."));
-        List<String> roles = userEntity.getUserRoles().stream()
-                .map(ur->ur.getRoles()).map(r->r.getName()).toList();
-        return UserMapper.INSTANCE.userEntityToAccountDTO(userEntity,roles);
-
+    public boolean checkEmail(String email) {
+        return !userJpa.existsByEmail(email);
     }
 }

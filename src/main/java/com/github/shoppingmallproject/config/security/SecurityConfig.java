@@ -51,11 +51,10 @@ public class SecurityConfig {
                 })
                 .authorizeRequests(a ->
                             a
-                                    .requestMatchers("/api/v1/user/logout").hasAnyRole("ADMIN", "SUPERUSER", "USER")
-                                    .requestMatchers("/api/account/my-page").hasAnyRole("ADMIN", "SUPERUSER", "USER")
                                     .requestMatchers("/admin/**", "/api/account/set-super-user").hasRole("ADMIN")
-                                    .requestMatchers("/resources/static/**", "/api/account/*").permitAll()
-
+                                    .requestMatchers("/api/v1/user/logout").hasAnyRole("ADMIN", "SUPERUSER", "USER")
+                                    .requestMatchers("/api/account/*").hasAnyRole("ADMIN", "SUPERUSER", "USER")
+                                    .requestMatchers("/resources/static/**", "/api/auth/*").permitAll()
                 )
                 .logout(l-> {
                     l.logoutRequestMatcher(new AntPathRequestMatcher("/api/account/logout"));

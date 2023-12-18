@@ -2,10 +2,7 @@ package com.github.shoppingmallproject.repository.userRoles;
 
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Table(name = "user_roles")
@@ -14,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class UserRoles {
 
     @Id
