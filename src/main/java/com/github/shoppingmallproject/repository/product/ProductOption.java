@@ -2,17 +2,19 @@ package com.github.shoppingmallproject.repository.product;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name = "product_option")
 @Setter
+@Getter
 public class ProductOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_option_id")
-    private Long productOptionId;
+    private Integer productOptionId;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
@@ -25,6 +27,6 @@ public class ProductOption {
     private String productSize;
 
     @Column(name = "stock", nullable = false)
-    private int stock;
+    private Integer stock;
 
 }

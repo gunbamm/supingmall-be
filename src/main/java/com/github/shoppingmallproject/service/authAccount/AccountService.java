@@ -1,5 +1,9 @@
 package com.github.shoppingmallproject.service.authAccount;
 
+import com.github.shoppingmallproject.repository.cart.CartEntity;
+import com.github.shoppingmallproject.repository.cart.CartJpa;
+import com.github.shoppingmallproject.repository.product.ProductOption;
+import com.github.shoppingmallproject.repository.product.ProductOptionJpa;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.repository.userRoles.Roles;
 import com.github.shoppingmallproject.repository.userRoles.RolesJpa;
@@ -12,6 +16,8 @@ import com.github.shoppingmallproject.service.exceptions.DuplicateKeyException;
 import com.github.shoppingmallproject.service.exceptions.NotFoundException;
 import com.github.shoppingmallproject.service.mappers.UserMapper;
 import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;
+import com.github.shoppingmallproject.web.dto.product.CartAdd;
+import com.github.shoppingmallproject.web.dto.product.CartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -33,6 +39,8 @@ public class AccountService {
     private final UserRolesJpa userRolesJpa;
     private final RolesJpa rolesJpa;
     private final PasswordEncoder passwordEncoder;
+    private final ProductOptionJpa productOptionJpa;
+    private final CartJpa cartJpa;
 
 
     //탈퇴한지 7일 이상된 계정 정보 자동 삭제 (하루에 한번씩 로직 실행됨)
@@ -157,4 +165,50 @@ public class AccountService {
                 +"가 추가 되었습니다.";
     }
 
+    @Transactional(transactionManager = "tm")
+    public String cartAddItem(String optionId,String quantity, CustomUserDetails customUserDetails) {
+        UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
+        ProductOption productOption = productOptionJpa.getReferenceById(Integer.valueOf(optionId));
+        CartEntity cartEntity = CartEntity.builder()
+                .productOption(productOption)
+                .user(userEntity)
+                .cartAmount(Integer.valueOf(quantity))
+                .build();
+        cartJpa.save(cartEntity);
+        return "장바구니에 상품 담음";
+    }
+
+
+    public List<CartResponse> getCartItem(CustomUserDetails customUserDetails) {
+        UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
+        List<CartEntity> cartEntities = cartJpa.findByUserJoin(userEntity);
+
+//        List<String> thumbnailList = cartEntities.stream()
+//                .map(ce->ce.getProductOption()).map(po->po.getProductEntity())
+//                .map(pe->pe.getProductPhotos())
+//                .flatMap(ppl->ppl.stream()
+//                        .filter(pp->pp.isPhotoType())
+//                        .map(pp->pp.getPhotoUrl()))
+//                .toList(); //플랫맵 사용 예시
+
+
+        List<CartResponse> cartResponseList = cartEntities.stream()
+                .map(cartEntity -> CartResponse.builder()
+                    .color(cartEntity.getProductOption().getColor())
+                    .size(cartEntity.getProductOption().getProductSize())
+                    .optionId(cartEntity.getProductOption().getProductOptionId())
+                    .productId(cartEntity.getProductOption().getProductEntity().getProductId())
+                    .productName(cartEntity.getProductOption().getProductEntity().getProductName())
+                    .quantity(cartEntity.getCartAmount())
+                    .productImg(cartEntity.getProductOption().getProductEntity()
+                            .getProductPhotos().stream()
+                            .filter(pp->pp.isPhotoType())
+                            .map(pp->pp.getPhotoUrl())
+                            .toList()
+                    )
+                    .build())
+                .toList();
+
+        return cartResponseList;
+    }
 }

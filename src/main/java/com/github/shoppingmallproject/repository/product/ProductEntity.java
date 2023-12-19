@@ -2,6 +2,7 @@ package com.github.shoppingmallproject.repository.product;
 
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -11,19 +12,20 @@ import java.util.List;
 
 @Entity
 @Setter
+@Getter
 @Table(name = "product")
 public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private Long productId;
+    private Integer productId;
 
     @Column(name = "product_name", length = 50, nullable = false)
     private String productName;
 
     @Column(name = "product_price", nullable = false)
-    private int productPrice;
+    private Integer productPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
