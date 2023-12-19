@@ -2,9 +2,11 @@ package com.github.shoppingmallproject.repository.product;
 
 
 import jakarta.persistence.*;
+import lombok.Setter;
 
 @Entity
 @Table(name = "product_option")
+@Setter
 public class ProductOption {
 
     @Id

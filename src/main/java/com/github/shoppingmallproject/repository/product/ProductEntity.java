@@ -2,10 +2,15 @@ package com.github.shoppingmallproject.repository.product;
 
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
+import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Setter
 @Table(name = "product")
 public class ProductEntity {
 
@@ -17,9 +22,6 @@ public class ProductEntity {
     @Column(name = "product_name", length = 50, nullable = false)
     private String productName;
 
-    @Column(name = "description_photo", length = 255)
-    private String descriptionPhoto;
-
     @Column(name = "product_price", nullable = false)
     private int productPrice;
 
@@ -30,17 +32,25 @@ public class ProductEntity {
     @Column(name = "product_status", length = 30, nullable = false, columnDefinition = "varchar(30) default '판매중'")
     private String productStatus;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_at", nullable = false)
-    private Date createAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_at", nullable = false)
+    private LocalDateTime createAt;
+
+
     @Column(name = "finish_at")
-    private Date finishAt;
+    private LocalDate finishAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity userEntity;
+
+    @OneToMany(mappedBy = "productEntity")
+    private List<ProductPhoto> productPhotos;
+    @OneToMany(mappedBy = "productEntity")
+    private List<ProductOption> productOptions;
+
+
+
 
     public enum Category {
         상의("상의"),

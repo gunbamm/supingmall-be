@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.service;
+package com.github.shoppingmallproject.service.authAccount;
 
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.repository.userRoles.Roles;
@@ -11,12 +11,11 @@ import com.github.shoppingmallproject.service.exceptions.CustomBindException;
 import com.github.shoppingmallproject.service.exceptions.DuplicateKeyException;
 import com.github.shoppingmallproject.service.exceptions.NotFoundException;
 import com.github.shoppingmallproject.service.mappers.UserMapper;
-import com.github.shoppingmallproject.web.dto.AccountDTO;
+import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

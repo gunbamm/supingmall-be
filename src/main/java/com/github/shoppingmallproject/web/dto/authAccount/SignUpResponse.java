@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.web.dto;
+package com.github.shoppingmallproject.web.dto.authAccount;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

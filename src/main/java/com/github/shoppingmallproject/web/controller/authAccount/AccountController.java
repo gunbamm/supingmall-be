@@ -1,8 +1,8 @@
-package com.github.shoppingmallproject.web.controller;
+package com.github.shoppingmallproject.web.controller.authAccount;
 
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
-import com.github.shoppingmallproject.service.AccountService;
-import com.github.shoppingmallproject.web.dto.AccountDTO;
+import com.github.shoppingmallproject.service.authAccount.AccountService;
+import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,6 +1,6 @@
 package com.github.shoppingmallproject.config;
 
-import com.github.shoppingmallproject.service.AccountService;
+import com.github.shoppingmallproject.service.authAccount.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
