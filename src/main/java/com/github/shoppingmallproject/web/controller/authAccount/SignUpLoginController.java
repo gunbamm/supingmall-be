@@ -20,7 +20,7 @@ public class SignUpLoginController {
         return signUpLoginService.signUp(signUpRequest);
     }
 
-    @GetMapping("/check-email")
+    @GetMapping("/sign-up/check-email")
     public boolean checkEmail(HttpServletRequest httpServletRequest){
         return signUpLoginService.checkEmail(httpServletRequest.getParameter("email"));
     }

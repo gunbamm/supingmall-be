@@ -4,6 +4,7 @@ import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.service.authAccount.AccountService;
 import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;
 import com.github.shoppingmallproject.web.dto.product.CartAdd;
+import com.github.shoppingmallproject.web.dto.product.CartAndTotalQuantityResponse;
 import com.github.shoppingmallproject.web.dto.product.CartResponse;
 import com.github.shoppingmallproject.web.dto.product.OptionDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class AccountController {
                 customUserDetails);
     }
     @GetMapping("/my-page/cart")
-    public List<CartResponse> getCartItem(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public CartAndTotalQuantityResponse getCartItem(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         return accountService.getCartItem(customUserDetails);
     }
     @PostMapping("/withdrawal")

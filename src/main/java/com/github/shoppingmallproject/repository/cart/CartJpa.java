@@ -13,8 +13,7 @@ public interface CartJpa extends JpaRepository<CartEntity, Integer> {
             "SELECT DISTINCT ce " +
                     "FROM CartEntity ce " +
                     "JOIN FETCH ce.productOption po " +
-                    "JOIN FETCH po.productEntity pe " +
-                    "JOIN FETCH pe.productPhotos " +
+                    "JOIN FETCH po.productEntity " +
                     "WHERE ce.user = :userEntity"
     )
     List<CartEntity> findByUserJoin(UserEntity userEntity);

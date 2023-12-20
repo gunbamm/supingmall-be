@@ -2,6 +2,7 @@ package com.github.shoppingmallproject.service.authAccount;
 
 import com.github.shoppingmallproject.repository.cart.CartEntity;
 import com.github.shoppingmallproject.repository.cart.CartJpa;
+import com.github.shoppingmallproject.repository.product.ProductJpa;
 import com.github.shoppingmallproject.repository.product.ProductOption;
 import com.github.shoppingmallproject.repository.product.ProductOptionJpa;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
@@ -16,7 +17,8 @@ import com.github.shoppingmallproject.service.exceptions.DuplicateKeyException;
 import com.github.shoppingmallproject.service.exceptions.NotFoundException;
 import com.github.shoppingmallproject.service.mappers.UserMapper;
 import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;
-import com.github.shoppingmallproject.web.dto.product.CartAdd;
+import com.github.shoppingmallproject.web.dto.product.CartAndTotalQuantityResponse;
+import com.github.shoppingmallproject.web.dto.product.CartProductOptionResponse;
 import com.github.shoppingmallproject.web.dto.product.CartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.beans.FeatureDescriptor;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -41,6 +43,7 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
     private final ProductOptionJpa productOptionJpa;
     private final CartJpa cartJpa;
+    private final ProductJpa productJpa;
 
 
     //탈퇴한지 7일 이상된 계정 정보 자동 삭제 (하루에 한번씩 로직 실행됨)
@@ -179,36 +182,76 @@ public class AccountService {
     }
 
 
-    public List<CartResponse> getCartItem(CustomUserDetails customUserDetails) {
+    public CartAndTotalQuantityResponse getCartItem(CustomUserDetails customUserDetails) {
         UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
         List<CartEntity> cartEntities = cartJpa.findByUserJoin(userEntity);
+        if(cartEntities.isEmpty()) return null;
+        Map<Integer, List<CartEntity>> cartEntityMap = new HashMap<>();
+        for (CartEntity cartEntity : cartEntities) {
+            Integer productId = cartEntity.getProductOption().getProductEntity().getProductId();
+            List<CartEntity> productList = cartEntityMap.getOrDefault(productId, new ArrayList<>());
+            productList.add(cartEntity);
+            cartEntityMap.put(productId, productList);
+        }
 
+        List<List<CartEntity>> groupedCartEntities = new ArrayList<>(cartEntityMap.values());
+        List<CartResponse> cartResponseList = new ArrayList<>();
+
+        Integer totalQuantity = 0;
+        for (List<CartEntity> group : groupedCartEntities) {
+            List<CartProductOptionResponse> cartProductOptionResponseList = new ArrayList<>();
+            for(CartEntity groupedCart: group){
+                totalQuantity = totalQuantity + groupedCart.getCartAmount();
+
+                CartProductOptionResponse cartProductOptionResponse = CartProductOptionResponse.builder()
+                        .optionId(groupedCart.getProductOption().getProductOptionId())
+                        .color(groupedCart.getProductOption().getColor())
+                        .size(groupedCart.getProductOption().getProductSize())
+                        .quantity(groupedCart.getCartAmount())
+                        .build();
+                cartProductOptionResponseList.add(cartProductOptionResponse);
+            }
+
+            CartResponse cartResponse = CartResponse.builder()
+                    .productId(group.get(0).getProductOption().getProductEntity().getProductId())
+                    .productName(group.get(0).getProductOption().getProductEntity().getProductName())
+                    .productImg(group.get(0).getProductOption().getProductEntity()
+                            .getProductPhotos().stream()
+                            .filter(pp-> pp.isPhotoType())
+                            .map(pp-> pp.getPhotoUrl()).toList())
+                    .cartProductOptionResponse(cartProductOptionResponseList)
+                    .build();
+            cartResponseList.add(cartResponse);
+        }
+        CartAndTotalQuantityResponse cartAndTotalQuantityResponse = new CartAndTotalQuantityResponse();
+        cartAndTotalQuantityResponse.setCartResponseList(cartResponseList);
+        cartAndTotalQuantityResponse.setTotalQuantity(totalQuantity);
+
+        return cartAndTotalQuantityResponse;
 //        List<String> thumbnailList = cartEntities.stream()
 //                .map(ce->ce.getProductOption()).map(po->po.getProductEntity())
 //                .map(pe->pe.getProductPhotos())
 //                .flatMap(ppl->ppl.stream()
 //                        .filter(pp->pp.isPhotoType())
 //                        .map(pp->pp.getPhotoUrl()))
-//                .toList(); //플랫맵 사용 예시
+//                .toList(); //⬆️플랫맵 사용 예시
 
-
-        List<CartResponse> cartResponseList = cartEntities.stream()
-                .map(cartEntity -> CartResponse.builder()
-                    .color(cartEntity.getProductOption().getColor())
-                    .size(cartEntity.getProductOption().getProductSize())
-                    .optionId(cartEntity.getProductOption().getProductOptionId())
-                    .productId(cartEntity.getProductOption().getProductEntity().getProductId())
-                    .productName(cartEntity.getProductOption().getProductEntity().getProductName())
-                    .quantity(cartEntity.getCartAmount())
-                    .productImg(cartEntity.getProductOption().getProductEntity()
-                            .getProductPhotos().stream()
-                            .filter(pp->pp.isPhotoType())
-                            .map(pp->pp.getPhotoUrl())
-                            .toList()
-                    )
-                    .build())
-                .toList();
-
-        return cartResponseList;
+        //⬇️상품별로 그룹화 시키지않고 옵션별상품 하나하나 다 반환할때⬇️
+//        List<CartResponse> cartResponseList = cartEntities.stream()
+//                .map(cartEntity -> CartResponse.builder()
+//                    .color(cartEntity.getProductOption().getColor())
+//                    .size(cartEntity.getProductOption().getProductSize())
+//                    .optionId(cartEntity.getProductOption().getProductOptionId())
+//                    .productId(cartEntity.getProductOption().getProductEntity().getProductId())
+//                    .productName(cartEntity.getProductOption().getProductEntity().getProductName())
+//                    .quantity(cartEntity.getCartAmount())
+//                    .productImg(cartEntity.getProductOption().getProductEntity()
+//                            .getProductPhotos().stream()
+//                            .filter(pp->pp.isPhotoType())
+//                            .map(pp->pp.getPhotoUrl())
+//                            .toList()
+//                    )
+//                    .build())
+//                .toList();
     }
 }

@@ -4,6 +4,10 @@ datasource:
   driver-class-name: org.mariadb.jdbc.Driver
   url: jdbc:mariadb://database-1.cvyclyh4jg14.ap-northeast-2.rds.amazonaws.com:3306/shopping_mall_project
 
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 jwtpassword:
   source: ${JWT_CODE}

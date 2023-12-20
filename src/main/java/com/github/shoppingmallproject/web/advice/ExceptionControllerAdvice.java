@@ -3,6 +3,7 @@ package com.github.shoppingmallproject.web.advice;
 
 import com.github.shoppingmallproject.service.exceptions.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,8 +25,8 @@ public class ExceptionControllerAdvice {
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(CustomBindException.class)//양식과 맞지 않을때
-    public String handleCustomBindException(CustomBindException n){
-        return n.getMessage();
+    public ResponseEntity<String> handleCustomBindException(CustomBindException n){
+        return new ResponseEntity<>(n.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)

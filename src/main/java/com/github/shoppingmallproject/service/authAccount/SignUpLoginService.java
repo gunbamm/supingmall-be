@@ -140,6 +140,9 @@ public class SignUpLoginService {
     }
 
     public boolean checkEmail(String email) {
+        if (!email.matches(".+@.+\\..+")) {
+            throw new CustomBindException("이메일을 정확히 입력해주세요.");
+        }
         return !userJpa.existsByEmail(email);
     }
 }
