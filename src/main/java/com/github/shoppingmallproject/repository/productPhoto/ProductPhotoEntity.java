@@ -13,16 +13,16 @@ import lombok.*;
 @Table(name = "product_photo")
 public class ProductPhotoEntity {
 
-    @Id @Column(name = "photo_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer photoId;
+    @Id @Column(name = "product_photo_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer ProductPhotoId;
 
     @JoinColumn(name = "product_id")
     @ManyToOne(fetch = FetchType.EAGER)
     private ProductEntity productEntity;
 
-    @Column(name = "product_photo", nullable = false, length = 255)
-    private String productPhoto;
+    @Column(name = "photo_url", nullable = false, length = 255)
+    private String photoUrl;
 
     @Column(name = "photo_type", nullable = false)
-    private Boolean photoType;
+    private Integer photoType;
 }

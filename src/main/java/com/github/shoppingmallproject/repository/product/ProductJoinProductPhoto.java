@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.web.dto.findProductDTO;
+package com.github.shoppingmallproject.repository.product;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -11,15 +11,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProductList {
+public class ProductJoinProductPhoto {
     private String productId;
+    private Integer userId;
     private String productName;
     private Integer productPrice;
-    private String photoUrl;
     private String category;
     private String productStatus;
-//    private Float scoreAvg;
-//    private Integer reviewCount;
     private String createAt;
+    private String finishAt;
+    private String photoUrl;
+    //    private Float scoreAvg;
+//    private Integer reviewCount;
 }

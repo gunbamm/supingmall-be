@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)public class ProductResponse {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class ProductResponse {
     private String code;
     private String message;
-    private ProductList productList;
+    private List<ProductList> productList;
 }
