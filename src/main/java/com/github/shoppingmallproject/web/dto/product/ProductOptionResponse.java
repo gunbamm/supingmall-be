@@ -2,19 +2,20 @@ package com.github.shoppingmallproject.web.dto.product;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Setter
 @Getter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class CartResponse {
-    private Integer productId;
-    private String productName;
-    private List<String> productImg;
-    private List<CartProductOptionResponse> cartProductOptionResponse;
+public class ProductOptionResponse {
+    private Integer optionId;
+    private String color;
+    private String size;
+    private Integer price;
+    private Integer quantity;
 }

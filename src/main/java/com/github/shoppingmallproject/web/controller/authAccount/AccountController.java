@@ -1,12 +1,11 @@
 package com.github.shoppingmallproject.web.controller.authAccount;
 
+import com.github.shoppingmallproject.repository.order.OrderItemEntity;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.service.authAccount.AccountService;
 import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;
-import com.github.shoppingmallproject.web.dto.product.CartAdd;
 import com.github.shoppingmallproject.web.dto.product.CartAndTotalQuantityResponse;
-import com.github.shoppingmallproject.web.dto.product.CartResponse;
-import com.github.shoppingmallproject.web.dto.product.OptionDTO;
+import com.github.shoppingmallproject.web.dto.product.OrderResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/v1/api/account")
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
@@ -39,6 +38,10 @@ public class AccountController {
     @GetMapping("/my-page/cart")
     public CartAndTotalQuantityResponse getCartItem(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         return accountService.getCartItem(customUserDetails);
+    }
+    @GetMapping("/my-page/order-history")
+    public List<OrderResponse> getMyOrder(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        return accountService.getMyOrder(customUserDetails);
     }
     @PostMapping("/withdrawal")
     public String withdrawal(@AuthenticationPrincipal CustomUserDetails customUserDetails){
