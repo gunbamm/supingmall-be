@@ -6,12 +6,14 @@ import com.github.shoppingmallproject.repository.product.ProductPhoto;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import com.github.shoppingmallproject.web.dto.product.OptionDTO;
 import com.github.shoppingmallproject.web.dto.product.PhotoDTO;
+import com.github.shoppingmallproject.web.dto.product.ProductDetailResponse;
 import com.github.shoppingmallproject.web.dto.product.SaleRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -29,11 +31,22 @@ public interface ProductMapper {
     ProductEntity saleRequestToProductEntity
             (SaleRequest saleRequest, UserEntity userEntity, List<ProductOption> productOption, List<ProductPhoto> productPhoto);
 
+    @Mapping(target = "createAt", expression = "java(formatting(productEntity.getCreateAt()))")
+    @Mapping(target = "finishAt", expression = "java(formatting(productEntity.getFinishAt()))")
+    ProductDetailResponse productEntityToProductDetailResponse(ProductEntity productEntity);
+
     ProductOption OptionDTOToProductOption(OptionDTO optionDTO);
 
     ProductPhoto PhotoDTOToProductPhoto(PhotoDTO photoDTO);
 
-    default LocalDate strToTimeFormat(String finishAt){
-            return LocalDate.parse(finishAt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    default LocalDateTime strToTimeFormat(String finishAt){
+            return LocalDateTime.parse(finishAt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
+    default String formatting(LocalDateTime localDateTime){
+        if( localDateTime != null ){
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 - HH시 mm분");
+            return localDateTime.format(dateTimeFormatter);
+        }else return null;
+    }
+
 }

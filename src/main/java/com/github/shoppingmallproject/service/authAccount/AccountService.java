@@ -217,7 +217,7 @@ public class AccountService {
                     .productName(group.get(0).getProductOption().getProductEntity().getProductName())
                     .productImg(group.get(0).getProductOption().getProductEntity()
                             .getProductPhotos().stream()
-                            .filter(pp-> pp.isPhotoType())
+                            .filter(pp-> pp.getPhotoType())
                             .map(pp-> pp.getPhotoUrl()).toList())
                     .cartProductOptionResponse(cartProductOptionResponseList)
                     .build();

@@ -13,7 +13,7 @@ public class ProductPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_photo_id")
-    private Long productPhotoId;
+    private Integer productPhotoId;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
@@ -23,7 +23,7 @@ public class ProductPhoto {
     private String photoUrl;
 
     @Column(name = "photo_type", nullable = false)
-    private boolean photoType;
+    private Boolean photoType;
 
 
 }

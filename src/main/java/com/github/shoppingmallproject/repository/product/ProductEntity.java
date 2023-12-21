@@ -1,5 +1,6 @@
 package com.github.shoppingmallproject.repository.product;
 
+import com.github.shoppingmallproject.repository.review.ReviewEntitySihu;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,6 +34,8 @@ public class ProductEntity {
 
     @Column(name = "product_status", length = 30, nullable = false, columnDefinition = "varchar(30) default '판매중'")
     private String productStatus;
+    @Column(name = "rating")
+    private Double rating;
 
 
     @Column(name = "create_at", nullable = false)
@@ -40,7 +43,7 @@ public class ProductEntity {
 
 
     @Column(name = "finish_at")
-    private LocalDate finishAt;
+    private LocalDateTime finishAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -50,6 +53,8 @@ public class ProductEntity {
     private List<ProductPhoto> productPhotos;
     @OneToMany(mappedBy = "productEntity")
     private List<ProductOption> productOptions;
+    @OneToMany(mappedBy = "product")
+    private List<ReviewEntitySihu> reviewEntitySihus;
 
 
 
