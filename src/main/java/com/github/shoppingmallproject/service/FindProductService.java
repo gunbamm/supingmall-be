@@ -1,26 +1,26 @@
 package com.github.shoppingmallproject.service;
 
 import com.github.shoppingmallproject.repository.product.ProductEntity;
-import com.github.shoppingmallproject.repository.product.ProductJoinProductPhoto;
+import com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview;
 import com.github.shoppingmallproject.repository.product.ProductJpa;
-import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoEntity;
 import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoJpa;
-import com.github.shoppingmallproject.repository.review.ReviewEntity;
 import com.github.shoppingmallproject.repository.review.ReviewJpa;
-import com.github.shoppingmallproject.service.mappers.ProductMapper;
-import com.github.shoppingmallproject.web.dto.findProductDTO.ProductList;
+import com.github.shoppingmallproject.service.exceptions.NotFoundException;
 import com.github.shoppingmallproject.web.dto.findProductDTO.ProductResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@ToString
+@Slf4j
 public class FindProductService {
 
     private final ProductJpa productJpa;
@@ -28,26 +28,30 @@ public class FindProductService {
     private final ReviewJpa reviewJpa;
 
     public ProductResponse findProductByCategory(String category, Pageable pageable) {
+        // category arg 에러 예외 처리
         List<String> categories = new ArrayList<>();
-        if (category.equals("")) {
-            categories.add("상의");
-            categories.add("하의");
-            categories.add("신발");
-        } else categories.add(category);
-        Integer photoType = 1;
+        categories.add("상의");
+        categories.add("하의");
+        categories.add("신발");
+        categories.add("전체");
+        if (!categories.contains(category)) throw new NotFoundException("Code:NFC(Not Found Category)");
+
+        Page<ProductJoinPhotoAndReview> productJoinProductPhotos;
         String productStatus = "판매중";
-        Page<ProductJoinProductPhoto> productJoinProductPhotos = productJpa.findAllByCategoryInAndStatusAndProductPhoto(categories, productStatus, pageable);
-        List<ProductPhotoEntity> productPhotoEntities = productPhotoJpa.findAllByPhotoType(photoType);
-        List<ReviewEntity> reviewEntities = reviewJpa.findAll();
         String code = "SU";
         String message = "Success";
 
-        List<ProductList> productList = productJoinProductPhotos.stream().map(ProductMapper.INSTANCE::productAndProductPhotoToProductList).collect(Collectors.toList());
-        ProductResponse productResponse = new ProductResponse(code, message, productList);
-        return productResponse;
+        if (category.equals("전체")) {
+            productJoinProductPhotos = productJpa.findAllByStatusAndPhotoType(productStatus, pageable);
+        } else {
+            ProductEntity.Category category1 = ProductEntity.Category.valueOf(category);
+            productJoinProductPhotos = productJpa.findAllByCategoryInAndStatusAndPhotoType(category1, productStatus, pageable);
+        }
+        if (productJoinProductPhotos.isEmpty()) throw new NotFoundException("Code:NFP(Not Found Product in the Page");
 
+        return new ProductResponse(code, message, productJoinProductPhotos);
+    }
 
-
-
+    public ProductResponse findProductByKeyword(String keyword) {
     }
 }

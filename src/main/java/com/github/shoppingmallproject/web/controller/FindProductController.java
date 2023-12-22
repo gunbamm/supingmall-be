@@ -18,8 +18,13 @@ public class FindProductController {
 
     private final FindProductService findProductService;
 
-    @GetMapping("/product")
+    @GetMapping("/product-category")
     public ProductResponse findProductByCategory(@RequestParam("category") String category, Pageable pageable) {
         return findProductService.findProductByCategory(category, pageable);
+    }
+
+    @GetMapping("/product-keyword")
+    public ProductResponse findProductByKeyword(@RequestParam("keyword") String keyword) {
+        return findProductService.findProductByKeyword(keyword);
     }
 }

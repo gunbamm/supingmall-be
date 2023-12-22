@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "photoId")
+@EqualsAndHashCode(of = "ProductPhotoId")
 @Entity
 @Table(name = "product_photo")
 public class ProductPhotoEntity {
@@ -20,7 +20,7 @@ public class ProductPhotoEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private ProductEntity productEntity;
 
-    @Column(name = "photo_url", nullable = false, length = 255)
+    @Column(name = "photo_url", nullable = false)
     private String photoUrl;
 
     @Column(name = "photo_type", nullable = false)

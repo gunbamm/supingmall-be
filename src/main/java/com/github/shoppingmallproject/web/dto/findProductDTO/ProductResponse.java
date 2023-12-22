@@ -2,9 +2,9 @@ package com.github.shoppingmallproject.web.dto.findProductDTO;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview;
 import lombok.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -14,5 +14,5 @@ import java.util.List;
 public class ProductResponse {
     private String code;
     private String message;
-    private List<ProductList> productList;
+    private Page<ProductJoinPhotoAndReview> productList;
 }

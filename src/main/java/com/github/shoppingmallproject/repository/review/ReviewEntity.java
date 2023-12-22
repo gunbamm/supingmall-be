@@ -5,6 +5,8 @@ import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,7 +31,7 @@ public class ReviewEntity {
     private String reviewContents;
 
     @Column(name = "create_at", nullable = false)
-    private String createAt;
+    private LocalDateTime createAt;
 
     @Column(name = "score", nullable = false, columnDefinition = "CHECK(score >= 0 AND score <= 5")
     private Integer score;
