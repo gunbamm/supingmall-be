@@ -27,6 +27,7 @@ public class FindProductService {
     private final ProductPhotoJpa productPhotoJpa;
     private final ReviewJpa reviewJpa;
 
+
     public ProductResponse findProductByCategory(String category, Pageable pageable) {
         // category arg 에러 예외 처리
         List<String> categories = new ArrayList<>();
@@ -34,7 +35,7 @@ public class FindProductService {
         categories.add("하의");
         categories.add("신발");
         categories.add("전체");
-        if (!categories.contains(category)) throw new NotFoundException("Code:NFC(Not Found Category)");
+        if (!categories.contains(category)) throw new NotFoundException("NFC", "Not Found Category", category);
 
         Page<ProductJoinPhotoAndReview> productJoinProductPhotos;
         String productStatus = "판매중";
@@ -47,11 +48,20 @@ public class FindProductService {
             ProductEntity.Category category1 = ProductEntity.Category.valueOf(category);
             productJoinProductPhotos = productJpa.findAllByCategoryInAndStatusAndPhotoType(category1, productStatus, pageable);
         }
-        if (productJoinProductPhotos.isEmpty()) throw new NotFoundException("Code:NFP(Not Found Product in the Page");
+        if (productJoinProductPhotos.isEmpty()) throw new NotFoundException("NFP", "Not Found Product in the Page", String.valueOf(pageable.getPageNumber()));
 
         return new ProductResponse(code, message, productJoinProductPhotos);
     }
 
-    public ProductResponse findProductByKeyword(String keyword) {
+    public ProductResponse findProductByKeyword(String keyword, Pageable pageable) {
+        String productStatus = "판매중";
+        String code = "SU";
+        String message = "Success";
+
+        Page<ProductJoinPhotoAndReview> productJoinProductPhotos = productJpa.findByKeywordByStatusAndPhotoType(productStatus, keyword, pageable);
+
+        if (productJoinProductPhotos.isEmpty()) throw new NotFoundException("NFP", "Not Found Product in the Page", String.valueOf(pageable.getPageNumber()));
+
+        return new ProductResponse(code, message, productJoinProductPhotos);
     }
 }

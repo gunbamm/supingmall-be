@@ -49,7 +49,7 @@ public class AccountService {
 
     public AccountDTO getMyInfo(CustomUserDetails customUserDetails) {
         UserEntity userEntity = userJpa.findByEmailJoin(customUserDetails.getUsername())
-                .orElseThrow(()->new NotFoundException("계정을 찾을 수 없습니다."));
+                .orElseThrow(()->new NotFoundException("NFUI","Not Found User Information", customUserDetails.getUsername()));
         List<String> roles = userEntity.getUserRoles().stream()
                 .map(ur->ur.getRoles()).map(r->r.getName()).toList();
         return UserMapper.INSTANCE.userEntityToAccountDTO(userEntity,roles);
@@ -125,7 +125,7 @@ public class AccountService {
     @Transactional(transactionManager = "tm")
     public String withdrawal(CustomUserDetails customUserDetails) {
         UserEntity userEntity = userJpa.findById(customUserDetails.getUserId()).orElseThrow(
-                ()->new NotFoundException("계정을 찾을 수 없습니다. 다시 로그인 해주세요.")
+                ()->new NotFoundException("NFUI", "Not Found User Information", String.valueOf(customUserDetails.getUserId()))
         );
         if(userEntity.getStatus().equals("delete")){
             throw new DuplicateKeyException("이미 탈퇴처리된 회원 입니다.");
@@ -141,7 +141,7 @@ public class AccountService {
     @Transactional(transactionManager = "tm")
     public String setSuperUser(String email) {
         UserEntity userEntity = userJpa.findByEmailJoin(email)
-                .orElseThrow(()->new NotFoundException("이메일",email));
+                .orElseThrow(()->new NotFoundException("NFE", "Not Found Email",email));
         List<Roles> userRoles = userEntity.getUserRoles().stream()
                 .map(ur->ur.getRoles()).toList();
         Roles roles = rolesJpa.findByName("ROLE_SUPERUSER");

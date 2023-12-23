@@ -101,14 +101,14 @@ public class SignUpLoginService {
 
         if(emailOrPhoneNumber.matches("01\\d+")&&emailOrPhoneNumber.length()==11){
             userEntity = userJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("핸드폰번호", emailOrPhoneNumber)
+                    new NotFoundException("NFPN","Not Found Phone Number", emailOrPhoneNumber)
                     );
         } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
             userEntity = userJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("이메일",emailOrPhoneNumber)
+                    new NotFoundException("NFE", "Not Found Email", emailOrPhoneNumber)
             );
         } else userEntity = userJpa.findByNickNameJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("\""+emailOrPhoneNumber+"\" 계정을 찾을 수 없습니다.")
+                    new NotFoundException("NFNN","Not Found NickName", emailOrPhoneNumber)
         );
 
         try{

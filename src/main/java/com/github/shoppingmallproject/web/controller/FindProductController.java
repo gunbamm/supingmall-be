@@ -24,7 +24,7 @@ public class FindProductController {
     }
 
     @GetMapping("/product-keyword")
-    public ProductResponse findProductByKeyword(@RequestParam("keyword") String keyword) {
-        return findProductService.findProductByKeyword(keyword);
+    public ProductResponse findProductByKeyword(@RequestParam("keyword") String keyword, Pageable pageable) {
+        return findProductService.findProductByKeyword(keyword, pageable);
     }
 }

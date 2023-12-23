@@ -1,15 +1,17 @@
 package com.github.shoppingmallproject.service.exceptions;
 
-public class NotFoundException extends RuntimeException{
+import lombok.Getter;
+
+@Getter
+public class NotFoundException extends RuntimeException {
 
     private String code;
-    private String category;
+    private String request;
 
-    public NotFoundException(String message){
+    public NotFoundException(String code, String message, String request) {
         super(message);
-    }
-    public NotFoundException(String keyKor,String key) {
-        super("해당 "+keyKor+" \""+key+"\"의 계정을 찾을 수 없습니다.");
+        this.code = code;
+        this.request = request;
     }
 
 }
