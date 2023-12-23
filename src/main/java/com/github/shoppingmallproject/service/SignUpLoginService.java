@@ -123,7 +123,7 @@ public class SignUpLoginService {
                     Duration duration = Duration.between(now, lockDateTime.plusMinutes(5));
                     String minute = String.valueOf(duration.toMinutes());
                     String seconds = String.valueOf(duration.minusMinutes(duration.toMinutes()).getSeconds());
-                    throw new AccountLockedException(userEntity.getName(), minute, seconds);
+                    throw new AccountLockedException("ACL", "Lock User", "Remaining Time: " + minute + "분" + seconds + "초");
                 }
             }
             String email = userEntity.getEmail();

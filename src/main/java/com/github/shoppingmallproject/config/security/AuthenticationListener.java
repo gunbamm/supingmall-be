@@ -37,7 +37,8 @@ public class AuthenticationListener {
                 throw new BadCredentialsException(5-Integer.parseInt(result.get("remaining"))
                         +"번 틀렸습니다. "+"남은 횟수 : "+result.get("remaining"));
             } else if(result.get("request").equals("locked")){
-                throw new AccountLockedException(result.get("name"),result.get("minute"),result.get("seconds"));
+//                throw new AccountLockedException(result.get("name"),result.get("minute"),result.get("seconds"));
+                throw new AccountLockedException("ACL", "Locked User", "dd");
             }
         }
     }
