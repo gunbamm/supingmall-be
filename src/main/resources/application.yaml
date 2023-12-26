@@ -3,6 +3,8 @@ datasource:
   password: ${DATABASE_PASSWORD}
   driver-class-name: org.mariadb.jdbc.Driver
   url: jdbc:mariadb://database-1.cvyclyh4jg14.ap-northeast-2.rds.amazonaws.com:3306/shopping_mall_project
+  jpa:
+    show-sql: true
 
 dependencies:
   kakao_flutter_sdk_user: ^1.8.0 # 카카오 로그인
@@ -14,3 +16,7 @@ spring:
 
 jwtpassword:
   source: ${JWT_CODE}
+
+logging:
+  level:
+    org.hibernate.SQL: debug

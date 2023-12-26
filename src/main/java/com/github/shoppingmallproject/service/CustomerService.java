@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerService {
     private final ProductJpa productJPA;
-    private final ProductPhotoJpa productPhotoJpa;
+    private final ProductPhotoSihuJpa productPhotoSihuJpa;
     private final ProductOptionJpa productOptionJpa;
 
     private final UserJpa userJpa;
@@ -41,7 +41,7 @@ public class CustomerService {
         });
         productPhotoList.forEach(p->{
             p.setProductEntity(savedProduct);
-            productPhotoJpa.save(p);
+            productPhotoSihuJpa.save(p);
         });
 
         return "등록 성공";

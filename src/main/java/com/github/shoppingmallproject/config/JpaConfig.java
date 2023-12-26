@@ -29,8 +29,8 @@ import java.util.Map;
                 "com.github.shoppingmallproject.repository.product",
                 "com.github.shoppingmallproject.repository.cart",
                 "com.github.shoppingmallproject.repository.review",
-                "com.github.shoppingmallproject.repository.order"
-
+                "com.github.shoppingmallproject.repository.order",
+                "com.github.shoppingmallproject.repository.productPhoto"
         },
         entityManagerFactoryRef = "localContainerEntityManagerFactoryBean",
         transactionManagerRef = "tm"
@@ -56,7 +56,8 @@ public class JpaConfig {
                 "com.github.shoppingmallproject.repository.product",
                 "com.github.shoppingmallproject.repository.cart",
                 "com.github.shoppingmallproject.repository.review",
-                "com.github.shoppingmallproject.repository.order"
+                "com.github.shoppingmallproject.repository.order",
+                "com.github.shoppingmallproject.repository.productPhoto"
         );
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         lemfb.setJpaVendorAdapter(vendorAdapter);

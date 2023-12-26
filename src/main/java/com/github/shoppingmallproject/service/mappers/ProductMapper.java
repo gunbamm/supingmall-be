@@ -12,7 +12,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -48,5 +47,4 @@ public interface ProductMapper {
             return localDateTime.format(dateTimeFormatter);
         }else return null;
     }
-
 }

@@ -54,13 +54,13 @@ public class SecurityConfig {
                                     .requestMatchers("/v1/admin/**", "/v1/api/account/set-super-user","/v1/api/customer/*").hasAnyRole("ADMIN","SUPERUSER")
                                     .requestMatchers("/v1/api/user/logout").hasAnyRole("ADMIN", "SUPERUSER", "USER")
                                     .requestMatchers("/v1/api/account/**").hasAnyRole("ADMIN", "SUPERUSER", "USER")
-                                    .requestMatchers("/resources/static/**", "/v1/api/auth/*").permitAll()
+                                    .requestMatchers("/resources/static/**", "/v1/api/auth/*",  "/v1/api/product/*").permitAll()
+
                 )
-                .logout(l-> {
+                .logout(l->{
                     l.logoutRequestMatcher(new AntPathRequestMatcher("/api/account/logout"));
                     l.logoutSuccessUrl("/api/account/login");
                     l.invalidateHttpSession(true);
-
                 })
                 .addFilterBefore(new JwtFilter(jwtTokenConfig), UsernamePasswordAuthenticationFilter.class);
     return http.build();
