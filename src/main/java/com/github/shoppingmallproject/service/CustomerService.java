@@ -1,6 +1,10 @@
 package com.github.shoppingmallproject.service;
 
 import com.github.shoppingmallproject.repository.product.*;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionJpa;
+import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoEntity;
+import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoJpa;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import com.github.shoppingmallproject.repository.users.UserJpa;
@@ -16,32 +20,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerService {
     private final ProductJpa productJPA;
-    private final ProductPhotoSihuJpa productPhotoSihuJpa;
+    private final ProductPhotoJpa productPhotoJpa;
     private final ProductOptionJpa productOptionJpa;
-
     private final UserJpa userJpa;
 
 
     @Transactional("tm")
     public String regProduct(CustomUserDetails customUserDetails, SaleRequest saleRequest) {
         UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
-        List<ProductOption> productOptionList = saleRequest.getOption().stream()
-                .map(op->ProductMapper.INSTANCE.OptionDTOToProductOption(op))
+        List<ProductOptionEntity> productOptionEntityList = saleRequest.getOption().stream()
+                .map(op->ProductMapper.INSTANCE.OptionDTOToProductOptionEntity(op))
                 .toList();
-        List<ProductPhoto> productPhotoList = saleRequest.getPhoto().stream()
-                .map(ph->ProductMapper.INSTANCE.PhotoDTOToProductPhoto(ph))
+        List<ProductPhotoEntity> productPhotoList = saleRequest.getPhoto().stream()
+                .map(ph->ProductMapper.INSTANCE.PhotoDTOToProductPhotoEntity(ph))
                 .toList();
 
         ProductEntity productEntity = ProductMapper.INSTANCE
-                .saleRequestToProductEntity(saleRequest, userEntity, productOptionList, productPhotoList);
+                .saleRequestToProductEntity(saleRequest, userEntity, productOptionEntityList, productPhotoList);
         ProductEntity savedProduct = productJPA.save(productEntity);
-        productOptionList.forEach(o->{
+        productOptionEntityList.forEach(o->{
             o.setProductEntity(savedProduct);
             productOptionJpa.save(o);
         });
         productPhotoList.forEach(p->{
             p.setProductEntity(savedProduct);
-            productPhotoSihuJpa.save(p);
+            productPhotoJpa.save(p);
         });
 
         return "등록 성공";

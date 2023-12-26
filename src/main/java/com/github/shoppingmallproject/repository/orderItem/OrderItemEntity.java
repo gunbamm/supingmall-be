@@ -1,7 +1,8 @@
-package com.github.shoppingmallproject.repository.order;
+package com.github.shoppingmallproject.repository.orderItem;
 
 
-import com.github.shoppingmallproject.repository.product.ProductOption;
+import com.github.shoppingmallproject.repository.order.OrderEntity;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -17,7 +18,7 @@ public class OrderItemEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_option_id", nullable = false)
-    private ProductOption productOption;
+    private ProductOptionEntity productOptionEntity;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)

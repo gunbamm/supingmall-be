@@ -2,9 +2,9 @@ package com.github.shoppingmallproject.service;
 
 import com.github.shoppingmallproject.repository.product.ProductEntity;
 import com.github.shoppingmallproject.repository.product.ProductJpa;
-import com.github.shoppingmallproject.repository.product.ProductOption;
-import com.github.shoppingmallproject.repository.product.ProductPhoto;
-import com.github.shoppingmallproject.repository.review.ReviewEntitySihu;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
+import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoEntity;
+import com.github.shoppingmallproject.repository.review.ReviewEntity;
 import com.github.shoppingmallproject.service.exceptions.NotFoundException;
 import com.github.shoppingmallproject.service.mappers.ProductMapper;
 import com.github.shoppingmallproject.web.dto.product.OptionDTO;
@@ -14,7 +14,6 @@ import com.github.shoppingmallproject.web.dto.product.ReviewDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,9 +26,9 @@ public class ProductDetailsTest {
                 .orElseThrow(()->new NotFoundException("상품을 찾을 수 없습니다."));
 
         ProductDetailResponse productDetailResponse = ProductMapper.INSTANCE.productEntityToProductDetailResponse(productEntity);
-        List<ProductPhoto> productPhotos = productEntity.getProductPhotos();
-        List<ProductOption> productOptions = productEntity.getProductOptions();
-        List<OptionDTO> optionDTOS = productOptions.stream()
+        List<ProductPhotoEntity> productPhotos = productEntity.getProductPhotoEntities();
+        List<ProductOptionEntity> productOptionEntities = productEntity.getProductOptionEntities();
+        List<OptionDTO> optionDTOS = productOptionEntities.stream()
                 .map(po->{
                     return OptionDTO.builder()
                             .color(po.getColor())
@@ -46,14 +45,14 @@ public class ProductDetailsTest {
         productDetailResponse.setProductPhoto(photoDTOS);
         productDetailResponse.setProductDetailList(optionDTOS);
 
-        List<ReviewEntitySihu> reviewEntitySihus = productEntity.getReviewEntitySihus();
+        List<ReviewEntity> reviewEntitySihus = productEntity.getReviewEntities();
         List<ReviewDTO> reviewDTOS = reviewEntitySihus.stream()
                 .map(re->{
                     return ReviewDTO.builder()
                             .score(re.getScore())
-                            .nickName(re.getUser().getNickName())
+                            .nickName(re.getUserEntity().getNickName())
                             .reviewContents(re.getReviewContents())
-                            .createAt(re.getCreatedAt())
+                            .createAt(re.getCreateAt())
                             .build();
                 }).toList();
         productDetailResponse.setProductReview(reviewDTOS);

@@ -1,6 +1,6 @@
 package com.github.shoppingmallproject.repository.review;
 
-import com.github.shoppingmallproject.repository.product.ProductPhoto;
+import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoEntity;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +15,7 @@ public interface ReviewJpa extends JpaRepository<ReviewEntity, Integer> {
                     "FROM ReviewEntity re " +
                     "JOIN FETCH re.userEntity ue " +
                     "JOIN FETCH re.productEntity pe " +
-                    "JOIN pe.productPhotos pp " +
+                    "JOIN pe.productPhotoEntities pp " +
                     "WHERE re.userEntity = :userId"
     )
     List<ReviewEntity> findByUserEntity(@Param("userId") UserEntity userEntity);
@@ -24,8 +24,8 @@ public interface ReviewJpa extends JpaRepository<ReviewEntity, Integer> {
     @Query("SELECT rp " +
             "FROM ReviewEntity r " +
             "JOIN r.productEntity p " +
-            "JOIN p.productPhotos rp " +
+            "JOIN p.productPhotoEntities rp " +
             "WHERE r.userEntity = :userId")
-    List<ProductPhoto> findProductPhotosByReviewId(@Param("userId") UserEntity userEntity);
+    List<ProductPhotoEntity> findProductPhotosByReviewId(@Param("userId") UserEntity userEntity);
 
 }

@@ -7,9 +7,10 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
+@EqualsAndHashCode(of = "reviewId")
+@Entity
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
@@ -17,24 +18,25 @@ import java.time.LocalDateTime;
 public class ReviewEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reviewId;
 
-    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
     private UserEntity userEntity;
 
-    @Column(name = "review_contents", length = 255)
+    @Column(name = "review_contents", columnDefinition = "LONGTEXT")
     private String reviewContents;
 
     @Column(name = "create_at", nullable = false)
     private LocalDateTime createAt;
 
-    @Column(name = "score", nullable = false)
+    @Column(name = "score", nullable = false, columnDefinition = "CHECK(score >= 1 AND score <= 5")
     private Integer score;
 
-    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne
     private ProductEntity productEntity;
+
 }
