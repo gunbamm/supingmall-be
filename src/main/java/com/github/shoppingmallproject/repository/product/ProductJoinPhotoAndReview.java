@@ -41,7 +41,7 @@ public class ProductJoinPhotoAndReview {
         this.category = category;
         this.createAt = formatting(createAt);
         this.photoUrl = photoUrl;
-        this.reviewCount = reviewCount.intValue();
+        this.reviewCount = reviewCount != null ? reviewCount.intValue() : 0;
         this.scoreAvg = scoreAvg != null ? scoreAvg.floatValue() : 0;
     }
 }
