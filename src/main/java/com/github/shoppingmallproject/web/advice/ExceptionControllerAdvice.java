@@ -27,6 +27,7 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(errorRequestResponse, HttpStatus.LOCKED);
     }
 
+
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST) // 요청 에러
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {

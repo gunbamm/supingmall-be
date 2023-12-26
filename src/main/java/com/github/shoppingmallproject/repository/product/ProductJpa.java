@@ -1,5 +1,6 @@
 package com.github.shoppingmallproject.repository.product;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,5 +39,4 @@ public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
             "ORDER BY p.productId ASC "
     )
     Page<ProductJoinPhotoAndReview> findByKeywordByStatusAndPhotoType(String productStatus, String keyword, Pageable pageable);
-
 }

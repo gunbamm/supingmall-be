@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.service;
+package com.github.shoppingmallproject.service.authAccount;
 
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import com.github.shoppingmallproject.repository.users.UserJpa;
