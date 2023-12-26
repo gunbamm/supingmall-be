@@ -54,6 +54,8 @@ public class ProductEntity {
     private List<ProductOption> productOptions;
     @OneToMany(mappedBy = "product")
     private List<ReviewEntitySihu> reviewEntitySihus;
+    @OneToMany(mappedBy = "productEntity")
+    private List<ReviewEntity> reviewEntity;
 
 
 
