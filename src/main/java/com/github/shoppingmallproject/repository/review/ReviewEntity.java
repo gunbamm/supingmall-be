@@ -7,33 +7,34 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = "reviewId")
-@Entity
 @Table(name = "review")
 public class ReviewEntity {
 
-    @Id @Column(name = "review_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
     private Integer reviewId;
 
-    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity userEntity;
 
-    @JoinColumn(name = "product_id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private ProductEntity productEntity;
-
-    @Column(name = "review_contents")
+    @Column(name = "review_contents", length = 255)
     private String reviewContents;
 
     @Column(name = "create_at", nullable = false)
     private LocalDateTime createAt;
 
-    @Column(name = "score", nullable = false, columnDefinition = "CHECK(score >= 0 AND score <= 5")
+    @Column(name = "score", nullable = false)
     private Integer score;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductEntity productEntity;
 }
