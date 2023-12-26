@@ -1,4 +1,4 @@
-package com.github.shoppingmallproject.web.dto;
+package com.github.shoppingmallproject.web.dto.authAccount;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

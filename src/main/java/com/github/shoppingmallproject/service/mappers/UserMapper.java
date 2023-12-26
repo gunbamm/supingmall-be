@@ -3,14 +3,12 @@ package com.github.shoppingmallproject.service.mappers;
 import com.github.shoppingmallproject.repository.userRoles.Roles;
 import com.github.shoppingmallproject.repository.userRoles.UserRoles;
 import com.github.shoppingmallproject.repository.users.UserEntity;
-import com.github.shoppingmallproject.web.dto.AccountDTO;
-import com.github.shoppingmallproject.web.dto.SignUpRequest;
-import com.github.shoppingmallproject.web.dto.SignUpResponse;
+import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;
+import com.github.shoppingmallproject.web.dto.authAccount.SignUpRequest;
+import com.github.shoppingmallproject.web.dto.authAccount.SignUpResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

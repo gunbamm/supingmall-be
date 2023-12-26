@@ -49,6 +49,7 @@ public class FindProductService {
             productJoinProductPhotos = productJpa.findAllByCategoryInAndStatusAndPhotoType(category1, productStatus, pageable);
         }
         if (productJoinProductPhotos.isEmpty()) throw new NotFoundException("NFP", "Not Found Product in the Page", String.valueOf(pageable.getPageNumber()));
+        log.info(productJoinProductPhotos.toString());
 
         return new ProductResponse(code, message, productJoinProductPhotos);
     }
