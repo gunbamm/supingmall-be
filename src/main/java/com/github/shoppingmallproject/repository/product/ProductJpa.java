@@ -13,7 +13,7 @@ public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
             "FROM ProductEntity p " +
             "LEFT JOIN p.productPhotoEntities t " +
             "LEFT JOIN p.reviewEntities r " +
-            "WHERE t.photoType = 1 AND p.productStatus = ?1 "+
+            "WHERE t.photoType = true AND p.productStatus = ?1 "+
             "GROUP BY p.productId " +
             "ORDER BY p.productId ASC "
     )
@@ -23,7 +23,7 @@ public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
             "FROM ProductEntity p " +
             "LEFT JOIN p.productPhotoEntities t " +
             "LEFT JOIN p.reviewEntities r " +
-            "WHERE t.photoType = 1 AND p.category = ?1 AND p.productStatus = ?2 "+
+            "WHERE t.photoType = true AND p.category = ?1 AND p.productStatus = ?2 "+
             "GROUP BY p.productId " +
             "ORDER BY p.productId ASC "
     )
@@ -34,7 +34,7 @@ public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
             "FROM ProductEntity p " +
             "LEFT JOIN p.productPhotoEntities t " +
             "LEFT JOIN p.reviewEntities r " +
-            "WHERE t.photoType = 1 AND p.productStatus = ?1 AND p.productName LIKE %?2%  "+
+            "WHERE t.photoType = true AND p.productStatus = ?1 AND p.productName LIKE %?2%  "+
             "GROUP BY p.productId " +
             "ORDER BY p.productId ASC "
     )

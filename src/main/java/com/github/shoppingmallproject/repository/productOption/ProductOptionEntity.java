@@ -1,6 +1,7 @@
-package com.github.shoppingmallproject.repository.product;
+package com.github.shoppingmallproject.repository.productOption;
 
 
+import com.github.shoppingmallproject.repository.product.ProductEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Table(name = "product_option")
 @Setter
 @Getter
-public class ProductOption {
+public class ProductOptionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
