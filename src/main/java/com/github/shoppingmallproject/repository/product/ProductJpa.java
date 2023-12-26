@@ -8,17 +8,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
-    @Query("SELECT new com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview(p.productId, p.userEntity.userId, p.productName, p.productPrice, p.category, p.createAt, t.photoUrl, COUNT(r.reviewId), AVG(r.score))" +
+    @Query("SELECT new com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview(p.productId, p.userEntity.userId, p.productName, p.productPrice, p.category, p.createAt, t.photoUrl, COUNT(DISTINCT r.reviewId), AVG(r.score)) " +
             "FROM ProductEntity p " +
             "LEFT JOIN p.productPhotoEntities t " +
             "LEFT JOIN p.reviewEntities r " +
-            "WHERE t.photoType = 1 AND p.productStatus = ?1 " +
+            "WHERE t.photoType = 1 AND p.productStatus = ?1 "+
             "GROUP BY p.productId " +
             "ORDER BY p.productId ASC "
     )
     Page<ProductJoinPhotoAndReview> findAllByStatusAndPhotoType(String productStatus, Pageable pageable);
 
-    @Query("SELECT new com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview(p.productId, p.userEntity.userId, p.productName, p.productPrice, p.category, p.createAt, t.photoUrl, COUNT(r.reviewId), AVG(r.score)) " +
+    @Query("SELECT new com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview(p.productId, p.userEntity.userId, p.productName, p.productPrice, p.category, p.createAt, t.photoUrl, COUNT(DISTINCT r.reviewId), AVG(r.score)) " +
             "FROM ProductEntity p " +
             "LEFT JOIN p.productPhotoEntities t " +
             "LEFT JOIN p.reviewEntities r " +
@@ -26,13 +26,14 @@ public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
             "GROUP BY p.productId " +
             "ORDER BY p.productId ASC "
     )
+
     Page<ProductJoinPhotoAndReview> findAllByCategoryInAndStatusAndPhotoType(ProductEntity.Category category, String productStatus, Pageable pageable);
 
-    @Query("SELECT new com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview(p.productId, p.userEntity.userId, p.productName, p.productPrice, p.category, p.createAt, t.photoUrl, COUNT(r.reviewId), AVG(r.score))" +
+    @Query("SELECT new com.github.shoppingmallproject.repository.product.ProductJoinPhotoAndReview(p.productId, p.userEntity.userId, p.productName, p.productPrice, p.category, p.createAt, t.photoUrl, COUNT(DISTINCT r.reviewId), AVG(r.score)) " +
             "FROM ProductEntity p " +
             "LEFT JOIN p.productPhotoEntities t " +
             "LEFT JOIN p.reviewEntities r " +
-            "WHERE t.photoType = 1 AND p.productStatus = ?1 AND p.productName LIKE %?2% " +
+            "WHERE t.photoType = 1 AND p.productStatus = ?1 AND p.productName LIKE %?2%  "+
             "GROUP BY p.productId " +
             "ORDER BY p.productId ASC "
     )

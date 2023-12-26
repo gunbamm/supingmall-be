@@ -8,13 +8,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "ProductPhotoId")
+@EqualsAndHashCode(of = "productPhotoId")
 @Entity
 @Table(name = "product_photo")
 public class ProductPhotoEntity {
 
     @Id @Column(name = "product_photo_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ProductPhotoId;
+    private Integer productPhotoId;
 
     @JoinColumn(name = "product_id")
     @ManyToOne(fetch = FetchType.EAGER)
