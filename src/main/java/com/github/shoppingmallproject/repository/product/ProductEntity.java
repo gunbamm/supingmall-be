@@ -48,12 +48,8 @@ public class ProductEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity userEntity;
 
-//    @OneToMany(mappedBy = "productEntity")
-//    private List<ProductPhoto> productPhotos;
     @OneToMany(mappedBy = "productEntity")
     private List<ProductOptionEntity> productOptionEntities;
-//    @OneToMany(mappedBy = "product")
-//    private List<ReviewEntitySihu> reviewEntitySihus;
 
     @OneToMany(mappedBy = "productEntity")
     private List<ProductPhotoEntity> productPhotoEntities;
@@ -69,12 +65,9 @@ public class ProductEntity {
 
         private final String value;
 
-
         Category(String value) {
             this.value = value;
         }
-
-
 
         public String getValue() {
             return value;

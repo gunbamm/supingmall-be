@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of = "reviewId")
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "review")
 public class ReviewEntity {
 
