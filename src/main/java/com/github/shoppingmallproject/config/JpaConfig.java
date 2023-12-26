@@ -25,7 +25,10 @@ import java.util.Map;
 @EnableJpaRepositories(
         basePackages = {
                 "com.github.shoppingmallproject.repository.userRoles",
-                "com.github.shoppingmallproject.repository.users"
+                "com.github.shoppingmallproject.repository.users",
+                "com.github.shoppingmallproject.repository.product",
+                "com.github.shoppingmallproject.repository.productPhoto",
+                "com.github.shoppingmallproject.repository.review"
         },
         entityManagerFactoryRef = "localContainerEntityManagerFactoryBean",
         transactionManagerRef = "tm"
@@ -47,7 +50,10 @@ public class JpaConfig {
         lemfb.setDataSource(datasource);
         lemfb.setPackagesToScan(
                 "com.github.shoppingmallproject.repository.userRoles",
-                "com.github.shoppingmallproject.repository.users"
+                "com.github.shoppingmallproject.repository.users",
+                "com.github.shoppingmallproject.repository.product",
+                "com.github.shoppingmallproject.repository.productPhoto",
+                "com.github.shoppingmallproject.repository.review"
         );
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         lemfb.setJpaVendorAdapter(vendorAdapter);
