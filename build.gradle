@@ -50,6 +50,9 @@ dependencies {
 
     //mariadb
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+
+    //JSON
+    implementation 'com.google.code.gson:gson:2.8.7'
 }
 
 tasks.named('test') {
