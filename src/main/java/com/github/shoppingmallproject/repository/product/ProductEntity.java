@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "productId")
 @Entity
+@Builder
 @Table(name = "product")
 public class ProductEntity {
 
