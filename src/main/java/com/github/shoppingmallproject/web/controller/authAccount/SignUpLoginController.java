@@ -1,20 +1,17 @@
-package com.github.shoppingmallproject.web.controller;
+package com.github.shoppingmallproject.web.controller.authAccount;
 
-import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
-import com.github.shoppingmallproject.service.SignUpLoginService;
-import com.github.shoppingmallproject.web.dto.AccountDTO;
-import com.github.shoppingmallproject.web.dto.LoginRequest;
-import com.github.shoppingmallproject.web.dto.SignUpRequest;
+import com.github.shoppingmallproject.service.authAccount.SignUpLoginService;
+import com.github.shoppingmallproject.web.dto.authAccount.LoginRequest;
+import com.github.shoppingmallproject.web.dto.authAccount.SignUpRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/v1/api/auth")
 @RequiredArgsConstructor
 public class SignUpLoginController {
     private final SignUpLoginService signUpLoginService;
@@ -23,7 +20,7 @@ public class SignUpLoginController {
         return signUpLoginService.signUp(signUpRequest);
     }
 
-    @GetMapping("/check-email")
+    @GetMapping("/sign-up/check-email")
     public boolean checkEmail(HttpServletRequest httpServletRequest){
         return signUpLoginService.checkEmail(httpServletRequest.getParameter("email"));
     }

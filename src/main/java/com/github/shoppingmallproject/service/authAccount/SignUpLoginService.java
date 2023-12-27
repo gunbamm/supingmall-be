@@ -1,7 +1,6 @@
-package com.github.shoppingmallproject.service;
+package com.github.shoppingmallproject.service.authAccount;
 
 import com.github.shoppingmallproject.config.security.JwtTokenConfig;
-import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.repository.userRoles.Roles;
 import com.github.shoppingmallproject.repository.userRoles.RolesJpa;
 import com.github.shoppingmallproject.repository.userRoles.UserRoles;
@@ -10,10 +9,9 @@ import com.github.shoppingmallproject.repository.users.UserEntity;
 import com.github.shoppingmallproject.repository.users.UserJpa;
 import com.github.shoppingmallproject.service.exceptions.*;
 import com.github.shoppingmallproject.service.mappers.UserMapper;
-import com.github.shoppingmallproject.web.dto.AccountDTO;
-import com.github.shoppingmallproject.web.dto.LoginRequest;
-import com.github.shoppingmallproject.web.dto.SignUpRequest;
-import com.github.shoppingmallproject.web.dto.SignUpResponse;
+import com.github.shoppingmallproject.web.dto.authAccount.LoginRequest;
+import com.github.shoppingmallproject.web.dto.authAccount.SignUpRequest;
+import com.github.shoppingmallproject.web.dto.authAccount.SignUpResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -101,14 +98,14 @@ public class SignUpLoginService {
 
         if(emailOrPhoneNumber.matches("01\\d+")&&emailOrPhoneNumber.length()==11){
             userEntity = userJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("핸드폰번호", emailOrPhoneNumber)
+                    new NotFoundException("NFPN","Not Found Phone Number", emailOrPhoneNumber)
                     );
         } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
             userEntity = userJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("이메일",emailOrPhoneNumber)
+                    new NotFoundException("NFE", "Not Found Email", emailOrPhoneNumber)
             );
         } else userEntity = userJpa.findByNickNameJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("\""+emailOrPhoneNumber+"\" 계정을 찾을 수 없습니다.")
+                    new NotFoundException("NFNN","Not Found NickName", emailOrPhoneNumber)
         );
 
         try{
@@ -123,7 +120,7 @@ public class SignUpLoginService {
                     Duration duration = Duration.between(now, lockDateTime.plusMinutes(5));
                     String minute = String.valueOf(duration.toMinutes());
                     String seconds = String.valueOf(duration.minusMinutes(duration.toMinutes()).getSeconds());
-                    throw new AccountLockedException(userEntity.getName(), minute, seconds);
+                    throw new AccountLockedException("ACL", "Lock User", "Remaining Time: " + minute + "분" + seconds + "초");
                 }
             }
             String email = userEntity.getEmail();
@@ -143,6 +140,9 @@ public class SignUpLoginService {
     }
 
     public boolean checkEmail(String email) {
+        if (!email.matches(".+@.+\\..+")) {
+            throw new CustomBindException("이메일을 정확히 입력해주세요.");
+        }
         return !userJpa.existsByEmail(email);
     }
 }

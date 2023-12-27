@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userJpa.findByEmailJoin(email).orElseThrow(() ->
-                new NotFoundException(String.format("해당 이메일 \"%s\"의 계정을 찾을 수 없습니다.", email)));
+                new NotFoundException("NFE", "Not Found Email", email));
 
         return CustomUserDetails.builder()
                 .userId(userEntity.getUserId())

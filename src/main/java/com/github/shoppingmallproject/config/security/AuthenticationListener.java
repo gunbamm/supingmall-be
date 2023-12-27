@@ -1,8 +1,7 @@
 package com.github.shoppingmallproject.config.security;
 
-import com.github.shoppingmallproject.service.AccountLockService;
+import com.github.shoppingmallproject.service.authAccount.AccountLockService;
 import com.github.shoppingmallproject.service.exceptions.AccountLockedException;
-import com.github.shoppingmallproject.service.exceptions.NotAcceptException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,7 +9,6 @@ import org.springframework.security.authentication.event.AuthenticationFailureBa
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -37,7 +35,8 @@ public class AuthenticationListener {
                 throw new BadCredentialsException(5-Integer.parseInt(result.get("remaining"))
                         +"번 틀렸습니다. "+"남은 횟수 : "+result.get("remaining"));
             } else if(result.get("request").equals("locked")){
-                throw new AccountLockedException(result.get("name"),result.get("minute"),result.get("seconds"));
+//                throw new AccountLockedException(result.get("name"),result.get("minute"),result.get("seconds"));
+                throw new AccountLockedException("ACL", "Locked User", "dd");
             }
         }
     }
