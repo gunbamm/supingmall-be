@@ -7,3 +7,11 @@ datasource:
 
 jwtpassword:
   source: ${JWT_CODE}
+
+kakao:
+  grant_type: authorization_code
+  client.id: fbe429887ccaa8b1ee741eaedb0fad31
+  client.secret: 3SjTZhmIIm0Hon085OdufmyKrYBqf19N
+  redirect.url: http://localhost:8080/oauth/kakao/callback
+  request.url: https://kauth.kakao.com/oauth/token
+  user_me.url: https://kapi.kakao.com/v2/user/me
