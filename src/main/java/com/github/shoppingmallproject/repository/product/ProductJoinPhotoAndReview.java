@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -42,7 +44,7 @@ public class ProductJoinPhotoAndReview {
         this.createAt = formatting(createAt);
         this.photoUrl = photoUrl;
         this.reviewCount = reviewCount != null ? reviewCount.intValue() : 0;
-        this.scoreAvg = scoreAvg != null ? scoreAvg.floatValue() : 0;
+        this.scoreAvg = scoreAvg != null ? BigDecimal.valueOf(scoreAvg).setScale(1, RoundingMode.HALF_UP).floatValue() : 0;
     }
 }
 
