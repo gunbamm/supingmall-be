@@ -1,5 +1,6 @@
 package com.github.shoppingmallproject.web.controller;
 
+import com.github.shoppingmallproject.repository.product.SaleStatusEntity;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.service.SalesStatusService;
 import com.github.shoppingmallproject.web.dto.SalesStatusDTO;
@@ -18,18 +19,10 @@ public class SalesStatusController {
 
     private final SalesStatusService salesStatusService;
 
-    @GetMapping("/account/my-page/sales-status")
-    public ResponseEntity<List<SalesStatusDTO>> findAllSalesStatus(@RequestHeader("Token") String token,
-                                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        if (customUserDetails == null) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
-        }
+    @GetMapping("/admin/my-page/sales-status")
+    public ResponseEntity<List<SaleStatusEntity>> findAllSalesStatus() {
 
-        if (!customUserDetails.getAuthorities().contains("ROLE_SELLER")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-
-        List<SalesStatusDTO> salesStatus = salesStatusService.findAllSalesStatus();
+        List<SaleStatusEntity> salesStatus = salesStatusService.findAllSalesStatus();
         return ResponseEntity.ok(salesStatus);
     }
 }
