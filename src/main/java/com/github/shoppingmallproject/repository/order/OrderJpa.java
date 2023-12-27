@@ -12,7 +12,7 @@ public interface OrderJpa extends JpaRepository<OrderEntity, Integer> {
             "SELECT oe " +
                     "FROM OrderEntity oe " +
                     "JOIN FETCH oe.orderItemEntities oie " +
-                    "JOIN FETCH oie.productOption " +
+                    "JOIN FETCH oie.productOptionEntity " +
                     "WHERE oe.userEntity = :userEntity "
     )
     List<OrderEntity> findAllByUserEntityJoin(UserEntity userEntity);

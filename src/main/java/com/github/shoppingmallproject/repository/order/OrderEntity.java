@@ -1,5 +1,6 @@
 package com.github.shoppingmallproject.repository.order;
 
+import com.github.shoppingmallproject.repository.orderItem.OrderItemEntity;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;

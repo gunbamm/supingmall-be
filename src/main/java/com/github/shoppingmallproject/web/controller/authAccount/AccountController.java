@@ -1,6 +1,5 @@
 package com.github.shoppingmallproject.web.controller.authAccount;
 
-import com.github.shoppingmallproject.repository.order.OrderItemEntity;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.service.authAccount.AccountService;
 import com.github.shoppingmallproject.web.dto.authAccount.AccountDTO;

@@ -48,8 +48,8 @@ public class ReviewService {
                             .score(item.getScore())
                             .productId(item.getProductEntity().getProductId())
                             .productName(item.getProductEntity().getProductName())
-                            .photoUrl(item.getProductEntity().getProductPhotos().get(0).getPhotoUrl())
-                            .photoType(String.valueOf(item.getProductEntity().getProductPhotos().get(0).getPhotoType()))
+                            .photoUrl(item.getProductEntity().getProductPhotoEntities().get(0).getPhotoUrl())
+                            .photoType(String.valueOf(item.getProductEntity().getProductPhotoEntities().get(0).getPhotoType()))
                             .build();
                 })
                 .toList();
