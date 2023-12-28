@@ -1,5 +1,6 @@
 package com.github.shoppingmallproject.repository.cart;
 
+import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface CartJpa extends JpaRepository<CartEntity, Integer> {
                     "WHERE ce.user = :userEntity"
     )
     List<CartEntity> findByUserJoin(UserEntity userEntity);
+
+    CartEntity findByUserAndProductOptionEntity(UserEntity userEntity, ProductOptionEntity productOptionEntity);
 }

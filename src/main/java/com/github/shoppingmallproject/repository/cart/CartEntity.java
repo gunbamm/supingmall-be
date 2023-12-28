@@ -4,14 +4,12 @@ package com.github.shoppingmallproject.repository.cart;
 import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "cart")
