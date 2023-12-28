@@ -5,10 +5,7 @@ import com.github.shoppingmallproject.repository.cart.CartJpa;
 import com.github.shoppingmallproject.repository.order.OrderEntity;
 import com.github.shoppingmallproject.repository.order.OrderItemEntity;
 import com.github.shoppingmallproject.repository.order.OrderJpa;
-import com.github.shoppingmallproject.repository.product.ProductJpa;
-import com.github.shoppingmallproject.repository.product.ProductOption;
-import com.github.shoppingmallproject.repository.product.ProductOptionJpa;
-import com.github.shoppingmallproject.repository.product.ProductPhoto;
+import com.github.shoppingmallproject.repository.product.*;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.repository.userRoles.Roles;
 import com.github.shoppingmallproject.repository.userRoles.RolesJpa;
@@ -272,6 +269,7 @@ public class AccountService {
     }
 
     public List<OrderResponse> getMyOrder(CustomUserDetails customUserDetails) {
+        List<SaleStatusEntity> saleStatusEntities = productJpa.findAllSalesStatus();
         UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
         List<OrderEntity> orderEntities = orderJpa.findAllByUserEntityJoin(userEntity);
         if (orderEntities.isEmpty()) return null;

@@ -24,5 +24,5 @@ public class ProductPhotoEntity {
     private String photoUrl;
 
     @Column(name = "photo_type", nullable = false)
-    private Integer photoType;
+    private Boolean photoType;
 }

@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ProductPhotoJpa extends JpaRepository<ProductPhotoEntity, Integer> {
-    List<ProductPhotoEntity> findAllByPhotoType(Integer photoType);
-
+    List<ProductPhotoEntity> findAllByPhotoType(Boolean photoType);
 }
