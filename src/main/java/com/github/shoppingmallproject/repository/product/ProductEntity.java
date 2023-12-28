@@ -1,7 +1,7 @@
 package com.github.shoppingmallproject.repository.product;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
 import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoEntity;
 import com.github.shoppingmallproject.repository.review.ReviewEntity;
-import com.github.shoppingmallproject.repository.review.ReviewEntitySihu;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "productId")
 @Entity
+@Builder
 @Table(name = "product")
 public class ProductEntity {
 
@@ -49,16 +50,7 @@ public class ProductEntity {
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "productEntity")
-    private List<ProductPhoto> productPhotos;
-    @OneToMany(mappedBy = "productEntity")
-    private List<ProductOption> productOptions;
-    @OneToMany(mappedBy = "product")
-    private List<ReviewEntitySihu> reviewEntitySihus;
-    @OneToMany(mappedBy = "productEntity")
-    private List<ReviewEntity> reviewEntity;
-
-
-
+    private List<ProductOptionEntity> productOptionEntities;
 
     @OneToMany(mappedBy = "productEntity")
     private List<ProductPhotoEntity> productPhotoEntities;
@@ -74,12 +66,9 @@ public class ProductEntity {
 
         private final String value;
 
-
         Category(String value) {
             this.value = value;
         }
-
-
 
         public String getValue() {
             return value;

@@ -11,16 +11,17 @@ import com.github.shoppingmallproject.repository.users.UserJpa;
 import com.github.shoppingmallproject.service.exceptions.NotFoundException;
 import com.github.shoppingmallproject.web.dto.ReviewResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReviewService {
 
     private final UserJpa userJpa;
@@ -48,8 +49,8 @@ public class ReviewService {
                             .score(item.getScore())
                             .productId(item.getProductEntity().getProductId())
                             .productName(item.getProductEntity().getProductName())
-                            .photoUrl(item.getProductEntity().getProductPhotos().get(0).getPhotoUrl())
-                            .photoType(String.valueOf(item.getProductEntity().getProductPhotos().get(0).getPhotoType()))
+                            .photoUrl(item.getProductEntity().getProductPhotoEntities().get(0).getPhotoUrl())
+                            .photoType(String.valueOf(item.getProductEntity().getProductPhotoEntities().get(0).getPhotoType()))
                             .build();
                 })
                 .toList();
@@ -70,30 +71,26 @@ public class ReviewService {
         UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
 //        UserEntity userEntity = userJpa.findByEmail("test3@naver.com"); // TEST
 
-
-        // productId 값은 화면에서 넘어올건데, 잘못된 값일 넘어올 경우의 처리는 안하였음.
         if (userEntity != null) {
             Optional<ProductEntity> productEntity = Optional.ofNullable(productJpa.findById(productId)
                     .orElseThrow(() -> new NotFoundException("유효하지 않은 상품번호입니다.")));
 
-            ReviewEntity createdReview = reviewJpa.save(
+            reviewJpa.save(
                     ReviewEntity.builder()
                             .reviewContents(reviewEntity.getReviewContents())
                             .createAt(LocalDateTime.now())
                             .score(reviewEntity.getScore())
                             .productEntity(productEntity.orElse(null))
                             .userEntity(userEntity)
-                            .build());
+                            .build()
+            );
 
-            if (createdReview != null) {
-                // 저장 성공
-                result.put("code", "S");
-                result.put("message", "리뷰 등록 성공");
-            } else {
-                // 저장 실패
-                result.put("code", "E");
-                result.put("message", "리뷰 등록 실패");
-            }
+            // 리뷰등록 후 상품테이블 rating 값 업데이트 하는 로직 호출
+            this.updateRatingFromProduct(productId);
+
+            // 저장 성공
+            result.put("code", "S");
+            result.put("message", "리뷰 등록 성공");
 
         }
 
@@ -119,22 +116,48 @@ public class ReviewService {
                 review.setReviewContents(reviewEntity.getReviewContents());
                 review.setScore(reviewEntity.getScore());
 
-                ReviewEntity updatedReview = reviewJpa.save(review);
+                reviewJpa.save(review);
 
-                if (updatedReview != null) {
-                    // 저장 성공
-                    result.put("code", "S");
-                    result.put("message", "리뷰 수정 성공");
-                } else {
-                    // 저장 실패
-                    result.put("code", "E");
-                    result.put("message", "리뷰 수정 실패");
-                }
+                // 리뷰업데이트 후 상품테이블 rating 값 업데이트 하는 로직 호출
+                this.updateRatingFromProduct(review.getProductEntity().getProductId());
+
+                // 저장 성공
+                result.put("code", "S");
+                result.put("message", "리뷰 수정 성공");
+
             }
 
         }
 
         return result;
+    }
+
+    public void updateRatingFromProduct(Integer productId) {
+        // 리뷰등록한 상품번호에 딸린 모든 리뷰를 가져옴
+        List<ReviewEntity> reviewListByProductId = reviewJpa.findByProductId(
+                ProductEntity.builder()
+                        .productId(productId)
+                        .build()
+        );
+
+        // 상품번호에 딸린 리뷰점수의 평균 값을 구함
+        OptionalDouble averageScore = reviewListByProductId.stream()
+                .mapToInt(ReviewEntity::getScore)
+                .average();
+
+        // 평균 값은 소수점 1자리까지 반올림하고, 상품번호로 상품테이블 조회하여 rating 값 업데이트 함
+        if (averageScore.isPresent()) {
+            double rating = averageScore.orElse(0.0);
+            String formattedRating = String.format("%.1f", rating);
+
+            Optional<ProductEntity> productInfo = productJpa.findById(productId);
+
+            if (productInfo.isPresent()) {
+                ProductEntity product = productInfo.get();
+                product.setRating(Double.valueOf(formattedRating));
+                productJpa.save(product);
+            }
+        }
     }
 
 }

@@ -4,23 +4,22 @@ import com.github.shoppingmallproject.repository.product.ProductEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = "productPhotoId")
 @Entity
 @Table(name = "product_photo")
+@Getter
+@Setter
 public class ProductPhotoEntity {
 
-    @Id @Column(name = "product_photo_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "product_photo_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productPhotoId;
 
-    @JoinColumn(name = "product_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity productEntity;
 
-    @Column(name = "photo_url", nullable = false)
+    @Column(name = "photo_url", length = 255, nullable = false)
     private String photoUrl;
 
     @Column(name = "photo_type", nullable = false)

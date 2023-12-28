@@ -1,8 +1,8 @@
 package com.github.shoppingmallproject.service.mappers;
 
 import com.github.shoppingmallproject.repository.product.ProductEntity;
-import com.github.shoppingmallproject.repository.product.ProductOption;
-import com.github.shoppingmallproject.repository.product.ProductPhoto;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
+import com.github.shoppingmallproject.repository.productPhoto.ProductPhotoEntity;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import com.github.shoppingmallproject.web.dto.product.OptionDTO;
 import com.github.shoppingmallproject.web.dto.product.PhotoDTO;
@@ -24,19 +24,19 @@ public interface ProductMapper {
     @Mapping(target = "createAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "finishAt", expression = "java(strToTimeFormat(saleRequest.getFinishAt()))")
     @Mapping(target = "userEntity", source = "userEntity")
-    @Mapping(target = "productOptions", source = "productOption")
-    @Mapping(target = "productPhotos", source = "productPhoto")
+    @Mapping(target = "productOptionEntities", source = "productOptionEntity")
+    @Mapping(target = "productPhotoEntities", source = "productPhotoEntity")
     @Mapping(target = "productStatus", expression = "java(\"판매중\")")
     ProductEntity saleRequestToProductEntity
-            (SaleRequest saleRequest, UserEntity userEntity, List<ProductOption> productOption, List<ProductPhoto> productPhoto);
+            (SaleRequest saleRequest, UserEntity userEntity, List<ProductOptionEntity> productOptionEntity, List<ProductPhotoEntity> productPhotoEntity);
 
     @Mapping(target = "createAt", expression = "java(formatting(productEntity.getCreateAt()))")
     @Mapping(target = "finishAt", expression = "java(formatting(productEntity.getFinishAt()))")
     ProductDetailResponse productEntityToProductDetailResponse(ProductEntity productEntity);
 
-    ProductOption OptionDTOToProductOption(OptionDTO optionDTO);
+    ProductOptionEntity OptionDTOToProductOptionEntity(OptionDTO optionDTO);
 
-    ProductPhoto PhotoDTOToProductPhoto(PhotoDTO photoDTO);
+    ProductPhotoEntity PhotoDTOToProductPhotoEntity(PhotoDTO photoDTO);
 
     default LocalDateTime strToTimeFormat(String finishAt){
             return LocalDateTime.parse(finishAt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));

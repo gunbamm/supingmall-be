@@ -3,9 +3,11 @@ package com.github.shoppingmallproject.service.authAccount;
 import com.github.shoppingmallproject.repository.cart.CartEntity;
 import com.github.shoppingmallproject.repository.cart.CartJpa;
 import com.github.shoppingmallproject.repository.order.OrderEntity;
-import com.github.shoppingmallproject.repository.order.OrderItemEntity;
+import com.github.shoppingmallproject.repository.orderItem.OrderItemEntity;
 import com.github.shoppingmallproject.repository.order.OrderJpa;
-import com.github.shoppingmallproject.repository.product.*;
+import com.github.shoppingmallproject.repository.product.ProductJpa;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionEntity;
+import com.github.shoppingmallproject.repository.productOption.ProductOptionJpa;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.repository.userRoles.Roles;
 import com.github.shoppingmallproject.repository.userRoles.RolesJpa;
@@ -175,9 +177,9 @@ public class AccountService {
     @Transactional(transactionManager = "tm")
     public String cartAddItem(String optionId,String quantity, CustomUserDetails customUserDetails) {
         UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
-        ProductOption productOption = productOptionJpa.getReferenceById(Integer.valueOf(optionId));
+        ProductOptionEntity productOptionEntity = productOptionJpa.getReferenceById(Integer.valueOf(optionId));
         CartEntity cartEntity = CartEntity.builder()
-                .productOption(productOption)
+                .productOptionEntity(productOptionEntity)
                 .user(userEntity)
                 .cartAmount(Integer.valueOf(quantity))
                 .build();
@@ -192,7 +194,7 @@ public class AccountService {
         if(cartEntities.isEmpty()) return null;
         Map<Integer, List<CartEntity>> cartEntityMap = new HashMap<>();
         for (CartEntity cartEntity : cartEntities) {
-            Integer productId = cartEntity.getProductOption().getProductEntity().getProductId();
+            Integer productId = cartEntity.getProductOptionEntity().getProductEntity().getProductId();
             List<CartEntity> productList = cartEntityMap.getOrDefault(productId, new ArrayList<>());
             productList.add(cartEntity);
             cartEntityMap.put(productId, productList);
@@ -209,11 +211,11 @@ public class AccountService {
                 totalQuantity = totalQuantity + groupedCart.getCartAmount();
 
                 ProductOptionResponse productOptionResponse = ProductOptionResponse.builder()
-                        .optionId(groupedCart.getProductOption().getProductOptionId())
-                        .color(groupedCart.getProductOption().getColor())
-                        .size(groupedCart.getProductOption().getProductSize())
+                        .optionId(groupedCart.getProductOptionEntity().getProductOptionId())
+                        .color(groupedCart.getProductOptionEntity().getColor())
+                        .size(groupedCart.getProductOptionEntity().getProductSize())
                         .quantity(groupedCart.getCartAmount())
-                        .price(groupedCart.getProductOption().getProductEntity().getProductPrice())
+                        .price(groupedCart.getProductOptionEntity().getProductEntity().getProductPrice())
                         .build();
                 productOptionResponseList.add(productOptionResponse);
             }
@@ -224,10 +226,10 @@ public class AccountService {
             inCartTotalPrice = inCartTotalPrice + totalPrice;
 
             ProductResponse productResponse = ProductResponse.builder()
-                    .productId(group.get(0).getProductOption().getProductEntity().getProductId())
-                    .productName(group.get(0).getProductOption().getProductEntity().getProductName())
-                    .productImg(group.get(0).getProductOption().getProductEntity()
-                            .getProductPhotos().stream()
+                    .productId(group.get(0).getProductOptionEntity().getProductEntity().getProductId())
+                    .productName(group.get(0).getProductOptionEntity().getProductEntity().getProductName())
+                    .productImg(group.get(0).getProductOptionEntity().getProductEntity()
+                            .getProductPhotoEntities().stream()
                             .filter(pp-> pp.getPhotoType())
                             .map(pp-> pp.getPhotoUrl()).toList())
                     .productOptionResponse(productOptionResponseList)
@@ -269,7 +271,6 @@ public class AccountService {
     }
 
     public List<OrderResponse> getMyOrder(CustomUserDetails customUserDetails) {
-        List<SaleStatusEntity> saleStatusEntities = productJpa.findAllSalesStatus();
         UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
         List<OrderEntity> orderEntities = orderJpa.findAllByUserEntityJoin(userEntity);
         if (orderEntities.isEmpty()) return null;
@@ -284,7 +285,7 @@ public class AccountService {
             List<OrderItemEntity> orderItemList = order.getOrderItemEntities();
             Map<Integer, List<OrderItemEntity>> orderItemEntityMap = new HashMap<>();
             for(OrderItemEntity orderTest : orderItemList){
-                Integer productId = orderTest.getProductOption().getProductEntity().getProductId();
+                Integer productId = orderTest.getProductOptionEntity().getProductEntity().getProductId();
 
                 List<OrderItemEntity> orderItemEntityList = orderItemEntityMap.getOrDefault(productId, new ArrayList<>());
 
@@ -298,9 +299,9 @@ public class AccountService {
                 Integer productTotalPrice = 0;
                 for(OrderItemEntity oie:gor){
                     ProductOptionResponse productOptionResponse = ProductOptionResponse.builder()
-                            .optionId(oie.getProductOption().getProductOptionId())
-                            .color(oie.getProductOption().getColor())
-                            .size(oie.getProductOption().getProductSize())
+                            .optionId(oie.getProductOptionEntity().getProductOptionId())
+                            .color(oie.getProductOptionEntity().getColor())
+                            .size(oie.getProductOptionEntity().getProductSize())
                             .price(oie.getOrderPrice())
                             .quantity(oie.getItemAmount())
                             .build();
@@ -310,10 +311,10 @@ public class AccountService {
                 }
 
                 ProductResponse productResponse = ProductResponse.builder()
-                        .productId(gor.get(0).getProductOption().getProductEntity().getProductId())
-                        .productName(gor.get(0).getProductOption().getProductEntity().getProductName())
+                        .productId(gor.get(0).getProductOptionEntity().getProductEntity().getProductId())
+                        .productName(gor.get(0).getProductOptionEntity().getProductEntity().getProductName())
                         .productOptionResponse(productOptionResponses)
-                        .productImg(gor.get(0).getProductOption().getProductEntity().getProductPhotos()
+                        .productImg(gor.get(0).getProductOptionEntity().getProductEntity().getProductPhotoEntities()
                                 .stream().filter(imgEntityList->imgEntityList.getPhotoType())
                                 .map(imgEntityList->imgEntityList.getPhotoUrl()).toList())
                         .productTotalPrice(productTotalPrice)
