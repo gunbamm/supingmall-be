@@ -35,13 +35,14 @@ public class SecurityConfig {
         http
                 .headers(h->h.frameOptions(f->f.sameOrigin()))
                 .csrf((c)->c.disable())
+                .cors(c->c.disable())
                 .httpBasic((h)->h.disable())
                 .formLogin(f->f.disable())
 //                .oauth2Login(o->o.loginPage("/api/account/login"))
                 .rememberMe(r->r.disable())
-                .cors(c->{
-                    c.configurationSource(corsConfigurationSource());
-                })
+//                .cors(c->{
+//                    c.configurationSource(corsConfigurationSource());
+//                })
                 .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
 
