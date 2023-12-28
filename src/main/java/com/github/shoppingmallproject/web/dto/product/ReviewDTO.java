@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewDTO {
+    private Integer reviewId;
+    private Integer userId;
+    private Integer productId;
     private String nickName;
     private String reviewContents;
     private LocalDateTime createAt;
     private Integer score;
-    private OptionDTO optionDTO;
 }

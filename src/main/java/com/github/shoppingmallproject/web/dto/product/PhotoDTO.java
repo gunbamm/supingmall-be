@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PhotoDTO {
+    private Integer productPhotoId;
     private String photoUrl;
     private Boolean photoType;
 }
