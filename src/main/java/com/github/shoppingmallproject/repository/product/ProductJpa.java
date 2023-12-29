@@ -42,13 +42,5 @@ public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
             "ORDER BY p.productId ASC "
     )
     Page<ProductJoinPhotoAndReview> findByKeywordByStatusAndPhotoType(String productStatus, String keyword, Pageable pageable);
-
-    @Query("SELECT new com.github.shoppingmallproject.repository.product.SaleStatusEntity" +
-            "(pp.photoUrl, p.productEntity.productName, p.productEntity.productPrice, p.stock, p.productEntity.category, p.productEntity.finishAt) " +
-            "FROM ProductOptionEntity p " +
-            "JOIN p.productEntity.productPhotoEntities pp ")
-    List<SaleStatusEntity> findAllSalesStatus();
-
-
-
+    
 }
