@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
@@ -56,13 +57,19 @@ public class ExceptionControllerAdvice {
         ErrorRequestResponse errorRequestResponse = new ErrorRequestResponse(ex.getCode(), ex.getMessage(), ex.getRequest());
         return new ResponseEntity<>(errorRequestResponse, HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // DB 에러
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse("DBE",  "Database Error");
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Requested resource not found");
     }
+
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // DB 에러
+//    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+//        ErrorResponse errorResponse = new ErrorResponse("DBE",  "Database Error");
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(CustomBindException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY) //양식과 맞지 않을때
