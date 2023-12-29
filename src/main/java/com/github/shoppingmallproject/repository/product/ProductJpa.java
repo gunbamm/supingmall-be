@@ -45,7 +45,7 @@ public interface ProductJpa extends JpaRepository<ProductEntity, Integer> {
 
     @Query("SELECT new com.github.shoppingmallproject.repository.product.SaleStatusEntity" +
             "(pp.photoUrl, p.productEntity.productName, p.productEntity.productPrice, p.stock, p.productEntity.category, p.productEntity.finishAt) " +
-            "FROM ProductOption p " +
+            "FROM ProductOptionEntity p " +
             "JOIN p.productEntity.productPhotoEntities pp ")
     List<SaleStatusEntity> findAllSalesStatus();
 
