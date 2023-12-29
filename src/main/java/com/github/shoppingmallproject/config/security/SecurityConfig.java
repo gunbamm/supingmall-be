@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -35,14 +36,14 @@ public class SecurityConfig {
         http
                 .headers(h->h.frameOptions(f->f.sameOrigin()))
                 .csrf((c)->c.disable())
-                .cors(c->c.disable())
+//                .cors(c->c.disable())
                 .httpBasic((h)->h.disable())
                 .formLogin(f->f.disable())
 //                .oauth2Login(o->o.loginPage("/api/account/login"))
                 .rememberMe(r->r.disable())
-//                .cors(c->{
-//                    c.configurationSource(corsConfigurationSource());
-//                })
+                .cors(c->{
+                    c.configurationSource(corsConfigurationSource());
+                })
                 .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
 
@@ -77,7 +78,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of());
+        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addExposedHeader("TOKEN");
         corsConfiguration.addAllowedHeader("*");
