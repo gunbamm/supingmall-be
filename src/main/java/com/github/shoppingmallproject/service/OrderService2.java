@@ -10,6 +10,7 @@ import com.github.shoppingmallproject.repository.productOption.ProductOptionJpa;
 import com.github.shoppingmallproject.repository.userDetails.CustomUserDetails;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import com.github.shoppingmallproject.repository.users.UserJpa;
+import com.github.shoppingmallproject.service.exceptions.CustomBindException;
 import com.github.shoppingmallproject.service.exceptions.NotFoundException;
 import com.github.shoppingmallproject.service.mappers.OrderMapper;
 import com.github.shoppingmallproject.web.dto.OrderDTO2;
@@ -31,7 +32,6 @@ public class OrderService2 {
 
     @Transactional(transactionManager = "tm")
     public boolean createOrder(CustomUserDetails customUserDetails, OrderDTO2 orderDTO2) {
-        try{
             List<OrderItemDTO2> orderItemDTO2s = orderDTO2.getOrderItemDTO2s();
             List<OrderProductOption> orderProductOptions= new ArrayList<>();
 
@@ -48,6 +48,9 @@ public class OrderService2 {
             for(OrderProductOption orderProductOption:orderProductOptions){
                 ProductOptionEntity productOptionEntity = orderProductOption.getProductOptionEntity();
                 Integer setStock = productOptionEntity.getStock()-orderProductOption.getAmount();
+                if(setStock<0) throw new CustomBindException("CBE",productOptionEntity.getProductEntity().getProductName()+", "
+                        +productOptionEntity.getColor()+", "+productOptionEntity.getProductSize()+" 의 재고가 구매수량 보다 적습니다.",
+                        "재고 : "+productOptionEntity.getStock() +" 구매 수량 : "+orderProductOption.getAmount());
                 productOptionEntity.setStock(setStock);
                 totalPrice = (totalPrice!=null)?totalPrice+productOptionEntity.getProductEntity().getProductPrice()*orderProductOption.getAmount()
                         :productOptionEntity.getProductEntity().getProductPrice()*orderProductOption.getAmount();
@@ -75,9 +78,6 @@ public class OrderService2 {
             }
 
             return true;
-        }catch (Exception e){
-            throw new RuntimeException("예기치 못한 오류");
-        }
     }
 
 }

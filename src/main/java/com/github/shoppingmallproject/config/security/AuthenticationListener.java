@@ -2,6 +2,8 @@ package com.github.shoppingmallproject.config.security;
 
 import com.github.shoppingmallproject.service.authAccount.AccountLockService;
 import com.github.shoppingmallproject.service.exceptions.AccountLockedException;
+import com.github.shoppingmallproject.service.exceptions.CustomBadCredentialsException;
+import com.github.shoppingmallproject.service.exceptions.CustomBindException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,24 +21,28 @@ public class AuthenticationListener {
     @EventListener
     public void handleBadCredentials(AuthenticationFailureBadCredentialsEvent event){
         Map<String, String> result = accountLockService.failureCount(event);
+        String wrongPassword = (String)event.getAuthentication().getCredentials();
         if(result.get("request")!=null){
             if(result.get("request").equals("unlock")){
                 accountLockService.resetFailureCount(event.getAuthentication().getName());
                 result = accountLockService.failureCount(event);
-                throw new BadCredentialsException(5-Integer.parseInt(result.get("remaining"))
-                        +"번 틀렸습니다. "+"남은 횟수 : "+result.get("remaining"));
+                throw new CustomBadCredentialsException("CBE","비밀번호가 틀립니다. "+(5-Integer.parseInt(result.get("remaining")))
+                        +"번 틀렸습니다. "+"남은 횟수 : "+result.get("remaining"),wrongPassword);
             }else if(result.get("request").equals("increment")) {
                 if (result.get("remaining").equals("1")){
-                    throw new BadCredentialsException(5-Integer.parseInt(result.get("remaining"))
+                    throw new CustomBadCredentialsException("CBE","비밀번호가 틀립니다. "+(5-Integer.parseInt(result.get("remaining")))
                             +"번 틀렸습니다. "+"남은 횟수 : "+result.get("remaining")
-                            +"\n한번 더 로그인 실패시 "+event.getAuthentication().getName()
-                            +" 계정이 5분간 잠깁니다.");
+                            +", 한번 더 로그인 실패시 "+event.getAuthentication().getName()
+                            +" 계정이 5분간 잠깁니다.", wrongPassword);
                 }
-                throw new BadCredentialsException(5-Integer.parseInt(result.get("remaining"))
-                        +"번 틀렸습니다. "+"남은 횟수 : "+result.get("remaining"));
+                throw new CustomBadCredentialsException("CBE","비밀번호가 틀립니다. "+(5-Integer.parseInt(result.get("remaining")))
+                        +"번 틀렸습니다. "+"남은 횟수 : "+result.get("remaining"),wrongPassword);
             } else if(result.get("request").equals("locked")){
 //                throw new AccountLockedException(result.get("name"),result.get("minute"),result.get("seconds"));
-                throw new AccountLockedException("ACL", "Locked User", "dd");
+                throw new AccountLockedException("ACL",
+                        String.format(
+                        "\"%s\"님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", result.get("name"),result.get("minute"),result.get("seconds")
+                        ), wrongPassword);
             }
         }
     }

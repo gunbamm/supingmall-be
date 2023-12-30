@@ -66,7 +66,7 @@ public class AccountService {
 
     public AccountDTO getMyInfo(CustomUserDetails customUserDetails) {
         UserEntity userEntity = userJpa.findByEmailJoin(customUserDetails.getUsername())
-                .orElseThrow(()->new NotFoundException("계정을 찾을 수 없습니다."));
+                .orElseThrow(()->new NotFoundException("NFE","계정을 찾을 수 없습니다.",customUserDetails.getUsername()));
         List<String> roles = userEntity.getUserRoles().stream()
                 .map(ur->ur.getRoles()).map(r->r.getName()).toList();
         return UserMapper.INSTANCE.userEntityToAccountDTO(userEntity,roles);
@@ -80,11 +80,11 @@ public class AccountService {
         String nickName = accountDTO.getNickName();
 
         if(!email.matches(".+@.+\\..+")){
-            throw new CustomBindException("이메일을 정확히 입력해주세요.");
+            throw new CustomBindException("CBE","이메일을 정확히 입력해주세요.",email);
         } else if (!phoneNumber.matches("01\\d{9}")) {
-            throw new CustomBindException("핸드폰 번호를 확인해주세요.");
+            throw new CustomBindException("CBE","핸드폰 번호를 확인해주세요.", phoneNumber);
         } else if (nickName.matches("01\\d{9}")){
-            throw new CustomBindException("핸드폰 번호를 닉네임으로 사용할수 없습니다.");
+            throw new CustomBindException("CBE","핸드폰 번호를 닉네임으로 사용할수 없습니다.",nickName);
         }
 
         if(userJpa.existsByEmailAndEmailNot(email, loggedEmail)){
@@ -106,13 +106,14 @@ public class AccountService {
 
         if(passwordEncoder.matches(accountDTO.getPassword(), customUserDetails.getPassword())){
             if (accountDTO.getNewPassword()!=null||accountDTO.getNewPasswordConfirm()!=null) {
-                if(accountDTO.getNewPassword()==null||accountDTO.getNewPasswordConfirm()==null) throw new CustomBindException("비밀번호 변경을 원하시면 새로운 비밀번호와, 비밀번호 확인 둘다 입력해주세요.");
-                else if (accountDTO.getPassword().equals(accountDTO.getNewPassword())) throw  new CustomBindException("현재 비밀번호와 변경하려는 비밀번호가 같습니다.");
+                if(accountDTO.getNewPassword()==null||accountDTO.getNewPasswordConfirm()==null) throw new CustomBindException("CBE"
+                        ,"비밀번호 변경을 원하시면 새로운 비밀번호와, 비밀번호 확인 둘다 입력해주세요.","new_password : "+accountDTO.getNewPassword()+", new_password_confirm : "+accountDTO.getNewPasswordConfirm());
+                else if (accountDTO.getPassword().equals(accountDTO.getNewPassword())) throw  new CustomBindException("CBE","현재 비밀번호와 변경하려는 비밀번호가 같습니다.","new_password : "+accountDTO.getNewPassword());
                 else if(accountDTO.getNewPassword().equals(accountDTO.getNewPasswordConfirm())){
                     if(!accountDTO.getNewPassword().matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]+$")
                             ||!(accountDTO.getNewPassword().length()>=8&&accountDTO.getNewPassword().length()<=20)
                     ){
-                        throw new CustomBindException("비밀번호는 8자 이상 20자 이하 숫자와 영문자 조합 이어야 합니다.");
+                        throw new CustomBindException("CBE","비밀번호는 8자 이상 20자 이하 숫자와 영문자 조합 이어야 합니다.",accountDTO.getNewPassword());
                     }
 
                     updateUser.setPassword(passwordEncoder.encode(accountDTO.getNewPassword()));
@@ -120,7 +121,7 @@ public class AccountService {
             }else updateUser.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
 
             BeanUtils.copyProperties(updateUser, existingUser, getNullPropertyNames(updateUser));
-        }else throw new CustomBindException("현재 비밀번호와 입력하신 비밀번호가 틀립니다.");
+        }else throw new CustomBindException("CBE","현재 비밀번호와 입력하신 비밀번호가 틀립니다.",accountDTO.getPassword());
 
         List<String> roles = existingUser.getUserRoles().stream()
                 .map(ur->ur.getRoles()).map(r->r.getName()).toList();
@@ -175,18 +176,18 @@ public class AccountService {
                 +"가 추가 되었습니다.";
     }
 
-    @Transactional(transactionManager = "tm")
-    public String cartAddItem(String optionId,String quantity, CustomUserDetails customUserDetails) {
-        UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
-        ProductOptionEntity productOptionEntity = productOptionJpa.getReferenceById(Integer.valueOf(optionId));
-        CartEntity cartEntity = CartEntity.builder()
-                .productOptionEntity(productOptionEntity)
-                .user(userEntity)
-                .cartAmount(Integer.valueOf(quantity))
-                .build();
-        cartJpa.save(cartEntity);
-        return "장바구니에 상품 담음";
-    }
+//    @Transactional(transactionManager = "tm")
+//    public String cartAddItem(String optionId,String quantity, CustomUserDetails customUserDetails) {
+//        UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
+//        ProductOptionEntity productOptionEntity = productOptionJpa.getReferenceById(Integer.valueOf(optionId));
+//        CartEntity cartEntity = CartEntity.builder()
+//                .productOptionEntity(productOptionEntity)
+//                .user(userEntity)
+//                .cartAmount(Integer.valueOf(quantity))
+//                .build();
+//        cartJpa.save(cartEntity);
+//        return "장바구니에 상품 담음";
+//    }
 
 
     public CartAndTotalQuantityResponse getCartItem(CustomUserDetails customUserDetails) {
