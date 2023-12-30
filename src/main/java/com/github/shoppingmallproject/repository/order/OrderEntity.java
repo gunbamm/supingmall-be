@@ -4,12 +4,14 @@ import com.github.shoppingmallproject.repository.orderItem.OrderItemEntity;
 import com.github.shoppingmallproject.repository.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "order_table")
 public class OrderEntity {
 

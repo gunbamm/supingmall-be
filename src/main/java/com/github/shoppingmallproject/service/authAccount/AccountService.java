@@ -37,6 +37,7 @@ import java.beans.FeatureDescriptor;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -272,6 +273,7 @@ public class AccountService {
 
     public List<OrderResponse> getMyOrder(CustomUserDetails customUserDetails) {
         UserEntity userEntity = userJpa.findByEmail(customUserDetails.getUsername());
+
         List<OrderEntity> orderEntities = orderJpa.findAllByUserEntityJoin(userEntity);
         if (orderEntities.isEmpty()) return null;
 

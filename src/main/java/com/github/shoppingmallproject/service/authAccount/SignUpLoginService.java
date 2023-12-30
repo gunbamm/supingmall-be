@@ -135,7 +135,7 @@ public class SignUpLoginService {
 //            throw new NotFoundException(String.format("해당 이메일 또는 핸드폰번호 \"%s\"의 계정을 찾을 수 없습니다.", emailOrPhoneNumber));
         }
         catch (BadCredentialsException e){
-            throw new BadCredentialsException("비밀번호가 틀립니다.\n"+e.getMessage());
+            throw new CustomBadCredentialsException("BCE","비밀번호가 틀립니다. "+e.getMessage(),null);
         }
     }
 

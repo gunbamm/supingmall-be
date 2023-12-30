@@ -78,9 +78,9 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(errorRequestResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
+    @ExceptionHandler(CustomBadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED) //비밀번호가 틀렸을때
-    public ResponseEntity<ErrorRequestResponse> handleBadCredentialsException(BadCredentialsException ex) {
+    public ResponseEntity<ErrorRequestResponse> handleBadCredentialsException(CustomBadCredentialsException ex) {
         ErrorRequestResponse errorRequestResponse = new ErrorRequestResponse(ex.getCode(), ex.getMessage(), ex.getRequest());
         return new ResponseEntity<>(errorRequestResponse, HttpStatus.UNAUTHORIZED);
     }
