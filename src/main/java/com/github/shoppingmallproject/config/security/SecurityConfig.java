@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -35,6 +36,7 @@ public class SecurityConfig {
         http
                 .headers(h->h.frameOptions(f->f.sameOrigin()))
                 .csrf((c)->c.disable())
+//                .cors(c->c.disable())
                 .httpBasic((h)->h.disable())
                 .formLogin(f->f.disable())
 //                .oauth2Login(o->o.loginPage("/api/account/login"))
@@ -51,9 +53,9 @@ public class SecurityConfig {
                 })
                 .authorizeRequests(a ->
                             a
+                                    .requestMatchers("v1/api/admin/my-page/*").hasRole("ADMIN")
                                     .requestMatchers("/v1/admin/**", "/v1/api/account/set-super-user","/v1/api/customer/*").hasAnyRole("ADMIN","SUPERUSER")
-                                    .requestMatchers("/v1/api/user/logout").hasAnyRole("ADMIN", "SUPERUSER", "USER")
-                                    .requestMatchers("/v1/api/account/**").hasAnyRole("ADMIN", "SUPERUSER", "USER")
+                                    .requestMatchers("/v1/api/user/logout", "/v1/api/account/**", "/v1/api/review/**").hasAnyRole("ADMIN", "SUPERUSER", "USER")
                                     .requestMatchers("/resources/static/**", "/v1/api/auth/*",  "/v1/api/product/*").permitAll()
 
                 )
@@ -76,9 +78,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of());
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addExposedHeader("TOKEN");
+        corsConfiguration.setAllowedOrigins(List.of("*"));
+//        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addExposedHeader("Token");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","PUT","POST","PATCH","DELETE","OPTIONS"));
         corsConfiguration.setMaxAge(1000L*60*60);

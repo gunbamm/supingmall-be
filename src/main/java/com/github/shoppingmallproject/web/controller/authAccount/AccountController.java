@@ -28,12 +28,12 @@ public class AccountController {
         return accountService.patchMyInfo(customUserDetails, accountDTO);
     }
 
-    @PostMapping("/my-page/cart")
-    public String cartAddItem(HttpServletRequest httpServletRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-        return accountService.cartAddItem(httpServletRequest.getParameter("option-id"),
-                httpServletRequest.getParameter("quantity"),
-                customUserDetails);
-    }
+//    @PostMapping("/my-page/cart")
+//    public String cartAddItem(HttpServletRequest httpServletRequest, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+//        return accountService.cartAddItem(httpServletRequest.getParameter("option-id"),
+//                httpServletRequest.getParameter("quantity"),
+//                customUserDetails);
+//    }
     @GetMapping("/my-page/cart")
     public CartAndTotalQuantityResponse getCartItem(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         return accountService.getCartItem(customUserDetails);

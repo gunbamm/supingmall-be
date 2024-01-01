@@ -1,17 +1,18 @@
-package com.github.shoppingmallproject.web.dto.product;
+package com.github.shoppingmallproject.web.dto.cart;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+@Setter
 @Getter
-@NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class OptionDTO {
+public class CartDTO {
+    private Integer cartId;
     private Integer productOptionId;
-    private String color;
-    private String productSize;
-    private Integer stock;
+    private Integer userId;
+    private Integer cartAmount;
 }

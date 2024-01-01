@@ -1,19 +1,20 @@
-package com.github.shoppingmallproject.web.dto.product;
+package com.github.shoppingmallproject.web.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PhotoDTO {
-    private Integer productPhotoId;
-    private String photoUrl;
-    private Boolean photoType;
+public class OrderDTO2 {
+    private String name;
+    private String ship;
+    private String orderRequest;
+    private List<OrderItemDTO2> orderItemDTO2s;
 }

@@ -45,8 +45,7 @@ public class FindProductService {
         if (category.equals("전체")) {
             productJoinProductPhotos = productJpa.findAllByStatusAndPhotoType(productStatus, pageable);
         } else {
-            ProductEntity.Category category1 = ProductEntity.Category.valueOf(category);
-            productJoinProductPhotos = productJpa.findAllByCategoryInAndStatusAndPhotoType(category1, productStatus, pageable);
+            productJoinProductPhotos = productJpa.findAllByCategoryInAndStatusAndPhotoType(ProductEntity.Category.valueOf(category), productStatus, pageable);
         }
         if (productJoinProductPhotos.isEmpty()) throw new NotFoundException("NFP", "Not Found Product in the Page", String.valueOf(pageable.getPageNumber()));
         log.info(productJoinProductPhotos.toString());
