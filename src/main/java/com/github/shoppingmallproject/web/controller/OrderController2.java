@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController2 {
     private final OrderService2 orderService2;
 
-    @PostMapping("/orders2")
+    @PostMapping("/orders")
     public boolean createOrder(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody OrderDTO2 orderDTO2){
         return orderService2.createOrder(customUserDetails, orderDTO2);
     }
